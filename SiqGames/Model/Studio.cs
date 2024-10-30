@@ -8,6 +8,6 @@
         public DateTime DateTimeModified { get; set; }
         public string UserCreated { get; set; }
         public string UserModified { get; set; }
-        public bool isActive { get; set; }
+        public bool IsActive { get; set; }
     }
 }
