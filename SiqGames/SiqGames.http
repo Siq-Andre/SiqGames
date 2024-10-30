@@ -1,0 +1,6 @@
+@SiqGames_HostAddress = http://localhost:5247
+
+GET {{SiqGames_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
