@@ -3,8 +3,10 @@
     public class GamePrice
     {
         public int GamePriceID { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
+        public int GameId { get; set; }
         public Game Game { get; set; }
+        public ICollection<Sale> Sales { get; set; }
         public DateTime DateTimeCreated { get; set; }
         public DateTime DateTimeModified { get; set; }
         public string UserCreated { get; set; }

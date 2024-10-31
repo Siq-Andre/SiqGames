@@ -6,6 +6,7 @@
         public string Nickname { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
+        public ICollection<Sale> Sales { get; set; }
         public DateOnly BirthDate { get; set; }
         public DateTime DateTimeCreated { get; set; }
         public DateTime DateTimeModified { get; set; }
