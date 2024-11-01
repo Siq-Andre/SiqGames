@@ -13,6 +13,7 @@ namespace SiqGames.Database
         public DbSet<Game> Games { get; set; }
         public DbSet<GamePrice> GamePrices { get; set; }
         public DbSet<Sale> Sales { get; set; }
+        public DbSet<PlayerGame> PlayerGames { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -20,6 +21,7 @@ namespace SiqGames.Database
             modelBuilder.Entity<Player>().Property(p => p.Nickname).HasMaxLength(20).IsRequired();
             modelBuilder.Entity<Player>().Property(p => p.FullName).HasMaxLength(60).IsRequired();
             modelBuilder.Entity<Player>().Property(p => p.Email).HasMaxLength(30).IsRequired();
+            modelBuilder.Entity<Player>().HasMany(e => e.PlayerGames).WithOne(e => e.Player).HasForeignKey(e => e.PlayerId).IsRequired();
             modelBuilder.Entity<Player>().Property(p => p.DateTimeCreated).IsRequired().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<Player>().Property(p => p.DateTimeModified).IsRequired().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<Player>().Property(p => p.UserCreated).HasMaxLength(30).IsRequired().HasDefaultValue("admin");
@@ -43,6 +45,7 @@ namespace SiqGames.Database
 
             modelBuilder.Entity<Game>().Property(p => p.GameName).HasMaxLength(60).IsRequired();
             modelBuilder.Entity<Game>().HasMany(e => e.GamePrices).WithOne(e => e.Game).HasForeignKey(e => e.GameId).IsRequired();
+            modelBuilder.Entity<Game>().HasMany(e => e.PlayerGames).WithOne(e => e.Game).HasForeignKey(e => e.GameId).IsRequired(); 
             modelBuilder.Entity<Game>().HasOne(e => e.Studio).WithMany(e => e.Games).HasForeignKey(e => e.StudioId).IsRequired();
             modelBuilder.Entity<Game>().Property(p => p.Description).HasMaxLength(200).IsRequired();
             modelBuilder.Entity<Game>().Property(p => p.DateTimeCreated).IsRequired().HasDefaultValueSql("getdate()");
@@ -68,6 +71,17 @@ namespace SiqGames.Database
             modelBuilder.Entity<Sale>().Property(p => p.UserCreated).HasMaxLength(30).IsRequired().HasDefaultValue("admin");
             modelBuilder.Entity<Sale>().Property(p => p.UserModified).HasMaxLength(30).IsRequired().HasDefaultValue("admin");
             modelBuilder.Entity<Sale>().Property(p => p.IsActive).IsRequired().HasDefaultValue(1);
+
+            modelBuilder.Entity<PlayerGame>().HasKey(p => new { p.PlayerId, p.GameId });
+            modelBuilder.Entity<PlayerGame>().HasOne(e => e.Player).WithMany(e => PlayerGames).HasForeignKey(e => e.PlayerId).IsRequired();
+            modelBuilder.Entity<PlayerGame>().HasOne(e => e.Game).WithMany(e => PlayerGames).HasForeignKey(e => e.GameId).IsRequired();
+            modelBuilder.Entity<PlayerGame>().Property(e => e.TimePlayed).HasColumnType("time");
+            modelBuilder.Entity<PlayerGame>().Property(p => p.DateTimeCreated).IsRequired().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<PlayerGame>().Property(p => p.DateTimeModified).IsRequired().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<PlayerGame>().Property(p => p.UserCreated).HasMaxLength(30).IsRequired().HasDefaultValue("admin");
+            modelBuilder.Entity<PlayerGame>().Property(p => p.UserModified).HasMaxLength(30).IsRequired().HasDefaultValue("admin");
+            modelBuilder.Entity<PlayerGame>().Property(p => p.IsActive).IsRequired().HasDefaultValue(1);
+
 
         }
     }
