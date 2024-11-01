@@ -5,6 +5,7 @@
         public int GameId { get; set; }
         public string GameName { get; set; }
         public ICollection<GamePrice> GamePrices { get; set; }
+        public List<GameGenre> GameGenres { get; set; }
         public List<PlayerGame> PlayerGames { get; set; }
         public int StudioId { get; set; }
         public Studio Studio { get; set; }
