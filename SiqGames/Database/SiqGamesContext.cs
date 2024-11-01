@@ -16,6 +16,7 @@ namespace SiqGames.Database
         public DbSet<PlayerGame> PlayerGames { get; set; }
         public DbSet<PlayerStudio> PlayerStudios { get; set; }
         public DbSet<GameGenre> GameGenres { get; set; }
+        public DbSet<PlayerFriend> PlayerFriends { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,6 +26,8 @@ namespace SiqGames.Database
             modelBuilder.Entity<Player>().Property(p => p.Email).HasMaxLength(30).IsRequired();
             modelBuilder.Entity<Player>().HasMany(e => e.PlayerGames).WithOne(e => e.Player).HasForeignKey(e => e.PlayerId).IsRequired();
             modelBuilder.Entity<Player>().Property(e => e.BirthDate).IsRequired();
+            modelBuilder.Entity<Player>().HasMany(e => e.PlayerFriends).WithOne(e => e.Player1).HasForeignKey(e => e.Player1Id).IsRequired();
+            modelBuilder.Entity<Player>().HasMany(e => e.PlayerFriends).WithOne(e => e.Player2).HasForeignKey(e => e.Player2Id).IsRequired();
             modelBuilder.Entity<Player>().HasMany(e => e.PlayerStudios).WithOne(e => e.Player).HasForeignKey(e => e.PlayerId).IsRequired();
             modelBuilder.Entity<Player>().Property(p => p.DateTimeCreated).IsRequired().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<Player>().Property(p => p.DateTimeModified).IsRequired().HasDefaultValueSql("getdate()");
@@ -107,6 +110,14 @@ namespace SiqGames.Database
             modelBuilder.Entity<GameGenre>().Property(p => p.UserModified).HasMaxLength(30).IsRequired().HasDefaultValue("admin");
             modelBuilder.Entity<GameGenre>().Property(p => p.IsActive).IsRequired().HasDefaultValue(1);
 
+            modelBuilder.Entity<PlayerFriend>().HasKey(p => new {p.Player1Id, p.Player2Id});
+            modelBuilder.Entity<PlayerFriend>().HasOne(e => e.Player1).WithMany(e => PlayerFriends).HasForeignKey(p => p.Player1Id).IsRequired();
+            modelBuilder.Entity<PlayerFriend>().HasOne(e => e.Player2).WithMany(e => PlayerFriends).HasForeignKey(p => p.Player2Id).IsRequired();
+            modelBuilder.Entity<PlayerFriend>().Property(p => p.DateTimeCreated).IsRequired().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<PlayerFriend>().Property(p => p.DateTimeModified).IsRequired().HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<PlayerFriend>().Property(p => p.UserCreated).HasMaxLength(30).IsRequired().HasDefaultValue("admin");
+            modelBuilder.Entity<PlayerFriend>().Property(p => p.UserModified).HasMaxLength(30).IsRequired().HasDefaultValue("admin");
+            modelBuilder.Entity<PlayerFriend>().Property(p => p.IsActive).IsRequired().HasDefaultValue(1);
         }
     }
 }
