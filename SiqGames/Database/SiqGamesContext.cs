@@ -118,8 +118,8 @@ namespace SiqGames.Database
             modelBuilder.Entity<GameGenre>().Property(p => p.IsActive).IsRequired().HasDefaultValue(1);
 
             modelBuilder.Entity<PlayerFriend>().HasKey(p => new {p.Player1Id, p.Player2Id});
-            modelBuilder.Entity<PlayerFriend>().HasOne(e => e.Player1).WithMany(e => e.Player1Friends).HasForeignKey(p => p.Player1Id).IsRequired();
-            modelBuilder.Entity<PlayerFriend>().HasOne(e => e.Player2).WithMany(e => e.Player2Friends).HasForeignKey(p => p.Player2Id).IsRequired();
+            modelBuilder.Entity<PlayerFriend>().HasOne(e => e.Player1).WithMany(e => e.Player1Friends).HasForeignKey(p => p.Player1Id).IsRequired().OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<PlayerFriend>().HasOne(e => e.Player2).WithMany(e => e.Player2Friends).HasForeignKey(p => p.Player2Id).IsRequired().OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<PlayerFriend>().ToTable(b => b.HasCheckConstraint("CK_Player1Id_LessThan_Player2Id", "[Player1Id] < [Player2Id]"));
             modelBuilder.Entity<PlayerFriend>().Property(p => p.DateTimeCreated).IsRequired().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<PlayerFriend>().Property(p => p.DateTimeModified).IsRequired().HasDefaultValueSql("getdate()");

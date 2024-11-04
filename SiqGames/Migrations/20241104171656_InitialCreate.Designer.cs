@@ -12,7 +12,7 @@ using SiqGames.Database;
 namespace SiqGames.Migrations
 {
     [DbContext(typeof(SiqGamesContext))]
-    [Migration("20241104142228_InitialCreate")]
+    [Migration("20241104171656_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -569,13 +569,13 @@ namespace SiqGames.Migrations
                     b.HasOne("SiqGames.Model.Player", "Player1")
                         .WithMany("Player1Friends")
                         .HasForeignKey("Player1Id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("SiqGames.Model.Player", "Player2")
                         .WithMany("Player2Friends")
                         .HasForeignKey("Player2Id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Player1");
