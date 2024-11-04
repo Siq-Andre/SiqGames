@@ -100,8 +100,8 @@ namespace SiqGames.Database
             modelBuilder.Entity<PlayerGame>().Property(p => p.IsActive).IsRequired().HasDefaultValue(1);
 
             modelBuilder.Entity<PlayerStudio>().HasKey(p => new { p.PlayerId, p.StudioId });
-            modelBuilder.Entity<PlayerStudio>().HasOne(e => e.Player).WithMany(e => PlayerStudios).HasForeignKey(e => e.PlayerId).IsRequired();
-            modelBuilder.Entity<PlayerStudio>().HasOne(e => e.Studio).WithMany(e => PlayerStudios).HasForeignKey(e => e.StudioId).IsRequired();
+            modelBuilder.Entity<PlayerStudio>().HasOne(e => e.Player).WithMany(e => e.PlayerStudios).HasForeignKey(e => e.PlayerId).IsRequired();
+            modelBuilder.Entity<PlayerStudio>().HasOne(e => e.Studio).WithMany(e => e.PlayerStudios).HasForeignKey(e => e.StudioId).IsRequired();
             modelBuilder.Entity<PlayerStudio>().Property(p => p.DateTimeCreated).IsRequired().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<PlayerStudio>().Property(p => p.DateTimeModified).IsRequired().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<PlayerStudio>().Property(p => p.UserCreated).HasMaxLength(30).IsRequired().HasDefaultValue("admin");
@@ -109,8 +109,8 @@ namespace SiqGames.Database
             modelBuilder.Entity<PlayerStudio>().Property(p => p.IsActive).IsRequired().HasDefaultValue(1);
 
             modelBuilder.Entity<GameGenre>().HasKey(p => new { p.GameId, p.GenreId });
-            modelBuilder.Entity<GameGenre>().HasOne(e => e.Game).WithMany(e => GameGenres).HasForeignKey(e => e.GameId).IsRequired();
-            modelBuilder.Entity<GameGenre>().HasOne(e => e.Genre).WithMany(e => GameGenres).HasForeignKey(e => e.GenreId).IsRequired();
+            modelBuilder.Entity<GameGenre>().HasOne(e => e.Game).WithMany(e => e.GameGenres).HasForeignKey(e => e.GameId).IsRequired();
+            modelBuilder.Entity<GameGenre>().HasOne(e => e.Genre).WithMany(e => e.GameGenres).HasForeignKey(e => e.GenreId).IsRequired();
             modelBuilder.Entity<GameGenre>().Property(p => p.DateTimeCreated).IsRequired().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<GameGenre>().Property(p => p.DateTimeModified).IsRequired().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<GameGenre>().Property(p => p.UserCreated).HasMaxLength(30).IsRequired().HasDefaultValue("admin");
