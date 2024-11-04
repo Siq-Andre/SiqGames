@@ -72,7 +72,7 @@ namespace SiqGames.Database
             modelBuilder.Entity<Game>().Property(p => p.IsActive).IsRequired().HasDefaultValue(1);
 
             modelBuilder.Entity<GamePrice>().Property(p => p.Price).HasColumnType("money").IsRequired();
-            modelBuilder.Entity<GamePrice>().HasOne(e => e.Game).WithMany(e => GamePrices).HasForeignKey(e => e.GameId).IsRequired();
+            modelBuilder.Entity<GamePrice>().HasOne(e => e.Game).WithMany(e => e.GamePrices).HasForeignKey(e => e.GameId).IsRequired();
             modelBuilder.Entity<GamePrice>().HasMany(e => e.Sales).WithOne(e => e.GamePrice).HasForeignKey(e => e.GamePriceId).IsRequired();
             modelBuilder.Entity<GamePrice>().Property(p => p.DateTimeCreated).IsRequired().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<GamePrice>().Property(p => p.DateTimeModified).IsRequired().HasDefaultValueSql("getdate()");
@@ -80,8 +80,8 @@ namespace SiqGames.Database
             modelBuilder.Entity<GamePrice>().Property(p => p.UserModified).HasMaxLength(30).IsRequired().HasDefaultValue("admin");
             modelBuilder.Entity<GamePrice>().Property(p => p.IsActive).IsRequired().HasDefaultValue(1);
 
-            modelBuilder.Entity<Sale>().HasOne(e => e.Player).WithMany(e => Sales).HasForeignKey(e => e.PlayerId).IsRequired();
-            modelBuilder.Entity<Sale>().HasOne(e => e.GamePrice).WithMany(e => Sales).HasForeignKey(e => e.GamePriceId).IsRequired();
+            modelBuilder.Entity<Sale>().HasOne(e => e.Player).WithMany(e => e.Sales).HasForeignKey(e => e.PlayerId).IsRequired();
+            modelBuilder.Entity<Sale>().HasOne(e => e.GamePrice).WithMany(e => e.Sales).HasForeignKey(e => e.GamePriceId).IsRequired();
             modelBuilder.Entity<Sale>().Property(p => p.FinalPrice).HasColumnType("money").IsRequired();
             modelBuilder.Entity<Sale>().Property(p => p.DateTimeCreated).IsRequired().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<Sale>().Property(p => p.DateTimeModified).IsRequired().HasDefaultValueSql("getdate()");
@@ -90,8 +90,8 @@ namespace SiqGames.Database
             modelBuilder.Entity<Sale>().Property(p => p.IsActive).IsRequired().HasDefaultValue(1);
 
             modelBuilder.Entity<PlayerGame>().HasKey(p => new { p.PlayerId, p.GameId });
-            modelBuilder.Entity<PlayerGame>().HasOne(e => e.Player).WithMany(e => PlayerGames).HasForeignKey(e => e.PlayerId).IsRequired();
-            modelBuilder.Entity<PlayerGame>().HasOne(e => e.Game).WithMany(e => PlayerGames).HasForeignKey(e => e.GameId).IsRequired();
+            modelBuilder.Entity<PlayerGame>().HasOne(e => e.Player).WithMany(e => e.PlayerGames).HasForeignKey(e => e.PlayerId).IsRequired();
+            modelBuilder.Entity<PlayerGame>().HasOne(e => e.Game).WithMany(e => e.PlayerGames).HasForeignKey(e => e.GameId).IsRequired();
             modelBuilder.Entity<PlayerGame>().Property(e => e.TimePlayed).HasColumnType("time");
             modelBuilder.Entity<PlayerGame>().Property(p => p.DateTimeCreated).IsRequired().HasDefaultValueSql("getdate()");
             modelBuilder.Entity<PlayerGame>().Property(p => p.DateTimeModified).IsRequired().HasDefaultValueSql("getdate()");
