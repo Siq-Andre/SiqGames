@@ -5,15 +5,7 @@ namespace SiqGames.Database
 {
     public class SiqGamesContext: DbContext
     {
-
-        private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=SiqGames;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(connectionString);
-        }
-
-        public SiqGamesContext(): base() { }
+        public SiqGamesContext(DbContextOptions<SiqGamesContext> options) : base(options) { }
 
         public DbSet<Player> Players { get; set; }
         public DbSet<Studio> Studios { get; set; }
