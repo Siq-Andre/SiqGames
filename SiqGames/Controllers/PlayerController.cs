@@ -9,11 +9,11 @@ namespace SiqGames.Controllers
     public class PlayerController : Controller
     {
 
-        private SiqGamesContext _context;
+        private DAL<Player> _playerDAL;
 
-        public PlayerController(SiqGamesContext context)
+        public PlayerController(DAL<Player> PlayerDAL)
         {
-            _context = context;
+            _playerDAL = PlayerDAL;
         }
 
         [HttpPost]
@@ -26,8 +26,7 @@ namespace SiqGames.Controllers
 
             try
             {
-                _context.Players.Add(player);
-                _context.SaveChanges();
+                _playerDAL.Add(player);
                 return CreatedAtAction(nameof(AddPlayer), new { id = player.PlayerId }, player);
             }
             catch (Exception ex)
@@ -41,7 +40,7 @@ namespace SiqGames.Controllers
         {
             try
             {
-                var players = _context.Players.ToList();
+                var players = _playerDAL.Get();
                 return Ok(players);
             }
             catch (Exception ex)
