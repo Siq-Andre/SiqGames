@@ -4,8 +4,8 @@
     {
         public int StudioId { get; set; }
         public string StudioName { get; set; }
-        public ICollection<Game> Games { get; set; }
-        public List<PlayerStudio> PlayerStudios { get; set; }
+        public ICollection<Game>? Games { get; set; }
+        public List<PlayerStudio>? PlayerStudios { get; set; }
         public DateTime DateTimeCreated { get; set; }
         public DateTime DateTimeModified { get; set; }
         public string UserCreated { get; set; }
