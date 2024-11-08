@@ -35,7 +35,7 @@ namespace SiqGames.Controllers
             }
         }
 
-        [HttpGet("select")]
+        [HttpGet("selectAll")]
         public ActionResult<IEnumerable<Player>> SelectPlayers()
         {
             try
@@ -47,6 +47,54 @@ namespace SiqGames.Controllers
             {
                 return StatusCode(500, "Internal server error while retrieving players.");
             }
+        }
+
+        [HttpGet("select/{id}")]
+        public IActionResult GetPlayerById(int id)
+        {
+            var Player = _playerDAL.GetBy(a => a.PlayerId.Equals(id));
+            if (Player == null)
+            {
+                return NotFound();
+            }
+            return Ok(Player);
+        }
+
+        [HttpPut("update/{id}")]
+        public IActionResult UpdatePlayer(int id, [FromBody] Player player)
+        {
+            if (player == null)
+            {
+                return BadRequest("Player data is invalid.");
+            }
+
+            var existingPlayer = _playerDAL.Get().FirstOrDefault(a => a.PlayerId == id);
+            if (existingPlayer == null)
+            {
+                return NotFound();
+            }
+
+            existingPlayer.Nickname = player.Nickname;
+            existingPlayer.FullName = player.FullName;
+            existingPlayer.Email = player.Email;
+            existingPlayer.BirthDate = player.BirthDate;
+            existingPlayer.UserModified = player.UserModified;
+
+            _playerDAL.Update(existingPlayer);
+            return Ok(existingPlayer); 
+        }
+
+        [HttpDelete("delete/{id}")]
+        public IActionResult DeletePlayer(int id)
+        {
+            var player = _playerDAL.Get().FirstOrDefault(a => a.PlayerId == id);
+            if (player == null)
+            {
+                return NotFound(); 
+            }
+
+            _playerDAL.Delete(player);
+            return Ok(player);
         }
 
     }
