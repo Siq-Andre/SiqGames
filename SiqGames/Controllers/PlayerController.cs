@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SiqGames.Database;
-using SiqGames.Model;
+using SiqGames.Entities;
 
 namespace SiqGames.Controllers
 {

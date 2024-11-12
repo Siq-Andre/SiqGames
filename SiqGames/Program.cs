@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SiqGames.Database;
-using SiqGames.Model;
+using SiqGames.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
