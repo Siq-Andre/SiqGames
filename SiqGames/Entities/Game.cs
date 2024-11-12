@@ -1,4 +1,4 @@
-﻿namespace SiqGames.Model
+﻿namespace SiqGames.Entities
 {
     public class Game
     {
