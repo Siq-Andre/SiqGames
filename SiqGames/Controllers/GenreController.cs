@@ -5,7 +5,7 @@ using SiqGames.Entities;
 namespace SiqGames.Controllers
 {
     [ApiController]
-    [Route("[Controller]")]
+    [Route("api/[Controller]")]
     public class GenreController : Controller
     {
         private DAL<Genre> _genreDAL;

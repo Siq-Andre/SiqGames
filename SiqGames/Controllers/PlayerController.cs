@@ -5,7 +5,7 @@ using SiqGames.Entities;
 namespace SiqGames.Controllers
 {
     [ApiController]
-    [Route("[Controller]")]
+    [Route("api/[Controller]")]
     public class PlayerController : Controller
     {
 
@@ -31,7 +31,7 @@ namespace SiqGames.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error while adding player.");
+                return StatusCode(500, "Internal server error:" + ex.Message);
             }
         }
 
@@ -45,7 +45,7 @@ namespace SiqGames.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error while retrieving players.");
+                return StatusCode(500, "Internal server error:" + ex.Message);
             }
         }
 
