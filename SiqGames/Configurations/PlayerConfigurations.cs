@@ -9,7 +9,7 @@ namespace SiqGames.Configurations
     {
         public void Configure (EntityTypeBuilder<Player> builder)
         {
-            builder.HasKey(p => p.PlayerId);
+            builder.HasKey(p => p.Id);
 
             builder.Property(p => p.Nickname)
                 .HasMaxLength(20)
