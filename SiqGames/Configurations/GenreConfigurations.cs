@@ -8,7 +8,7 @@ namespace SiqGames.Configurations
     {
         public void Configure (EntityTypeBuilder<Genre> builder)
         {
-            builder.HasKey(x => x.GenreId);
+            builder.HasKey(x => x.Id);
 
             builder.Property(p => p.GenreName)
                 .IsRequired()

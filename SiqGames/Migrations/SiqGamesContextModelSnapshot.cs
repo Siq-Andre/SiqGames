@@ -50,6 +50,9 @@ namespace SiqGames.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -229,7 +232,7 @@ namespace SiqGames.Migrations
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("SiqGames.Entities.Studio", b =>
+            modelBuilder.Entity("SiqGames.Entities.Player", b =>
                 {
                     b.Property<int>("PlayerId")
                         .ValueGeneratedOnAdd()
@@ -590,13 +593,13 @@ namespace SiqGames.Migrations
 
             modelBuilder.Entity("SiqGames.Entities.PlayerFriend", b =>
                 {
-                    b.HasOne("SiqGames.Entities.Studio", "Player1")
+                    b.HasOne("SiqGames.Entities.Player", "Player1")
                         .WithMany("Player1Friends")
                         .HasForeignKey("Player1Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SiqGames.Entities.Studio", "Player2")
+                    b.HasOne("SiqGames.Entities.Player", "Player2")
                         .WithMany("Player2Friends")
                         .HasForeignKey("Player2Id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -615,7 +618,7 @@ namespace SiqGames.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SiqGames.Entities.Studio", "Studio")
+                    b.HasOne("SiqGames.Entities.Player", "Player")
                         .WithMany("PlayerGames")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -623,12 +626,12 @@ namespace SiqGames.Migrations
 
                     b.Navigation("Game");
 
-                    b.Navigation("Studio");
+                    b.Navigation("Player");
                 });
 
             modelBuilder.Entity("SiqGames.Entities.PlayerStudio", b =>
                 {
-                    b.HasOne("SiqGames.Entities.Studio", "Studio")
+                    b.HasOne("SiqGames.Entities.Player", "Player")
                         .WithMany("PlayerStudios")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -640,7 +643,7 @@ namespace SiqGames.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Studio");
+                    b.Navigation("Player");
 
                     b.Navigation("Studio");
                 });
@@ -653,7 +656,7 @@ namespace SiqGames.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SiqGames.Entities.Studio", "Studio")
+                    b.HasOne("SiqGames.Entities.Player", "Player")
                         .WithMany("Sales")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -661,7 +664,7 @@ namespace SiqGames.Migrations
 
                     b.Navigation("GamePrice");
 
-                    b.Navigation("Studio");
+                    b.Navigation("Player");
                 });
 
             modelBuilder.Entity("SiqGames.Entities.Game", b =>
@@ -683,7 +686,7 @@ namespace SiqGames.Migrations
                     b.Navigation("GameGenres");
                 });
 
-            modelBuilder.Entity("SiqGames.Entities.Studio", b =>
+            modelBuilder.Entity("SiqGames.Entities.Player", b =>
                 {
                     b.Navigation("Player1Friends");
 

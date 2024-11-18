@@ -2,9 +2,7 @@
 {
     public class Studio: Entity<int>
     {
-        public int StudioId { get; set; }
         public string StudioName { get; set; }
-        public ICollection<Game>? Games { get; set; }
-        public List<PlayerStudio>? PlayerStudios { get; set; }
+        public ICollection<PlayerStudio>? PlayerStudios { get; set; }
     }
 }

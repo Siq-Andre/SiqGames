@@ -28,6 +28,11 @@ namespace SiqGames.Configurations
                 .HasForeignKey(e => e.PlayerId)
                 .IsRequired(false);
 
+            builder.HasMany(e => e.Sales)
+                .WithOne()
+                .HasForeignKey(e => e.Id)
+                .IsRequired(false);
+
             builder.Property(e => e.BirthDate)
                 .IsRequired();
 

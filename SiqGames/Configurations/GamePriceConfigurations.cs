@@ -8,21 +8,11 @@ namespace SiqGames.Configurations
     {
         public void Configure (EntityTypeBuilder<GamePrice> builder)
         {
-            builder.HasKey(x => x.GamePriceID);
+            builder.HasKey(x => x.Id);
 
             builder.Property(p => p.Price)
                 .HasColumnType("money")
                 .IsRequired();
-
-            builder.HasOne(e => e.Game)
-                .WithMany(e => e.GamePrices)
-                .HasForeignKey(e => e.GameId)
-                .IsRequired();
-
-            builder.HasMany(e => e.Sales)
-                .WithOne(e => e.GamePrice)
-                .HasForeignKey(e => e.GamePriceId)
-                .IsRequired(false);
 
             builder.Property(p => p.DateTimeCreated)
                 .IsRequired()
@@ -35,6 +25,7 @@ namespace SiqGames.Configurations
 
             builder.Property(p => p.DateTimeModified)
                 .IsRequired()
+                .ValueGeneratedOnAddOrUpdate()
                 .HasDefaultValueSql("getdate()");
 
             builder.Property(p => p.UserModified)

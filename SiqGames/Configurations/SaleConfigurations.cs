@@ -8,12 +8,7 @@ namespace SiqGames.Configurations
     {
         public void Configure (EntityTypeBuilder<Sale> builder)
         {
-            builder.HasKey(x => x.SaleId);
-
-            builder.HasOne(e => e.Player)
-                .WithMany(e => e.Sales)
-                .HasForeignKey(e => e.PlayerId)
-                .IsRequired();
+            builder.HasKey(x => x.Id);
 
             builder.HasOne(e => e.GamePrice)
                 .WithMany(e => e.Sales)
