@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SiqGames.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,9 +18,10 @@ namespace SiqGames.Migrations
                     GenreId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GenreName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
@@ -39,9 +40,10 @@ namespace SiqGames.Migrations
                     FullName = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     BirthDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
@@ -57,9 +59,10 @@ namespace SiqGames.Migrations
                     StudioId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudioName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
@@ -74,9 +77,10 @@ namespace SiqGames.Migrations
                 {
                     Player1Id = table.Column<int>(type: "int", nullable: false),
                     Player2Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
@@ -130,9 +134,10 @@ namespace SiqGames.Migrations
                 {
                     PlayerId = table.Column<int>(type: "int", nullable: false),
                     StudioId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
@@ -159,9 +164,10 @@ namespace SiqGames.Migrations
                 {
                     GenreId = table.Column<int>(type: "int", nullable: false),
                     GameId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
@@ -190,9 +196,10 @@ namespace SiqGames.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Price = table.Column<decimal>(type: "money", nullable: false),
                     GameId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
@@ -214,9 +221,10 @@ namespace SiqGames.Migrations
                     PlayerId = table.Column<int>(type: "int", nullable: false),
                     GameId = table.Column<int>(type: "int", nullable: false),
                     TimePlayed = table.Column<TimeOnly>(type: "time", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
@@ -246,9 +254,10 @@ namespace SiqGames.Migrations
                     PlayerId = table.Column<int>(type: "int", nullable: false),
                     GamePriceId = table.Column<int>(type: "int", nullable: false),
                     FinalPrice = table.Column<decimal>(type: "money", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
