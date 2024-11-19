@@ -4,23 +4,19 @@ using SiqGames.Entities;
 
 namespace SiqGames.Configurations
 {
-    public class PlayerGameConfigurations: IEntityTypeConfiguration<PlayerGame>
+    public class DlcConfigurations: IEntityTypeConfiguration<Dlc>
     {
-        public void Configure (EntityTypeBuilder<PlayerGame> builder)
+        public void Configure(EntityTypeBuilder<Dlc> builder)
         {
-            builder.HasKey(p => new { p.PlayerId, p.GameId });
+            builder.HasKey(x => x.Id);
 
-            builder.HasOne(e => e.Player)
-                .WithMany(e => e.PlayerGames)
-                .HasForeignKey(e => e.PlayerId)
+            builder.Property(p => p.Title)
+                .HasMaxLength(60)
                 .IsRequired();
 
-            builder.HasOne(e => e.Game)
-                .WithMany(e => e.PlayerGames)
-                .HasForeignKey(e => e.GameId)
+            builder.Property(p => p.Price)
+                .HasColumnType("money")
                 .IsRequired();
-
-            builder.Property(e => e.TimePlayed).HasColumnType("time");
 
             builder.Property(p => p.DateTimeCreated)
                 .IsRequired()
@@ -33,6 +29,7 @@ namespace SiqGames.Configurations
 
             builder.Property(p => p.DateTimeModified)
                 .IsRequired()
+                .ValueGeneratedOnAddOrUpdate()
                 .HasDefaultValueSql("getdate()");
 
             builder.Property(p => p.UserModified)

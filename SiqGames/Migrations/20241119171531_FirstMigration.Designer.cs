@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SiqGames.Database;
 
@@ -11,9 +12,11 @@ using SiqGames.Database;
 namespace SiqGames.Migrations
 {
     [DbContext(typeof(SiqGamesContext))]
-    partial class SiqGamesContextModelSnapshot : ModelSnapshot
+    [Migration("20241119171531_FirstMigration")]
+    partial class FirstMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,53 +70,6 @@ namespace SiqGames.Migrations
                     b.ToTable("PlayerStudios", (string)null);
                 });
 
-            modelBuilder.Entity("SiqGames.Entities.Dlc", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateTimeCreated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<DateTime>("DateTimeModified")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("money");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)");
-
-                    b.Property<string>("UserCreated")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasDefaultValue("admin");
-
-                    b.Property<string>("UserModified")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasDefaultValue("admin");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Dlc");
-                });
-
             modelBuilder.Entity("SiqGames.Entities.Game", b =>
                 {
                     b.Property<int>("Id")
@@ -134,6 +90,11 @@ namespace SiqGames.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("GameName")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("nvarchar(60)");
+
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -141,11 +102,6 @@ namespace SiqGames.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("money");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("UserCreated")
                         .IsRequired()
@@ -163,7 +119,7 @@ namespace SiqGames.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Game");
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("SiqGames.Entities.Genre", b =>
@@ -462,15 +418,6 @@ namespace SiqGames.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SiqGames.Entities.Dlc", b =>
-                {
-                    b.HasOne("SiqGames.Entities.Game", null)
-                        .WithMany("Dlcs")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("SiqGames.Entities.Game", b =>
                 {
                     b.HasOne("SiqGames.Entities.Studio", "Studio")
@@ -514,11 +461,6 @@ namespace SiqGames.Migrations
                         .HasForeignKey("Id");
 
                     b.Navigation("Game");
-                });
-
-            modelBuilder.Entity("SiqGames.Entities.Game", b =>
-                {
-                    b.Navigation("Dlcs");
                 });
 
             modelBuilder.Entity("SiqGames.Entities.Player", b =>

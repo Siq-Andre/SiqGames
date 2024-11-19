@@ -5,11 +5,11 @@
         public string Nickname { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
-        public ICollection<PlayerGame>? PlayerGames { get; set; }
-        public ICollection<Sale>? Sales { get; set; }
+        public ICollection<Game> Games { get; set; }
+        public ICollection<Sale> Sales { get; set; }
         public DateOnly BirthDate { get; set; }
-        public ICollection<PlayerFriend>? Player1Friends { get; set; }
-        public ICollection<PlayerFriend>? Player2Friends { get; set; }
-        public ICollection<PlayerStudio>? PlayerStudios { get; set; }
+        public ICollection<PlayerPlayer> Player1Friends { get; set; }
+        public ICollection<PlayerPlayer> Player2Friends { get; set; }
+        public ICollection<Studio> Studios { get; set; }
     }
 }

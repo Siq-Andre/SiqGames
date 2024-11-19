@@ -2,10 +2,11 @@
 {
     public class Game: Entity<int>
     {
-        public string GameName { get; set; }
-        public Price GamePrices { get; set; }
+        public string Title { get; set; }
+        public decimal Price { get; set; }
         public ICollection<Genre> Genres { get; set; }
-        public ICollection<PlayerGame> PlayerGames { get; set; }
+        public ICollection<Player> Players { get; set; }
+        public ICollection<Dlc> Dlcs { get; set; }
         public Studio Studio { get; set; }
         public string Description { get; set; }
     }

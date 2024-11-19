@@ -10,23 +10,21 @@ namespace SiqGames.Configurations
         {
             builder.HasKey(k => k.Id);
 
-            builder.Property(p => p.GameName)
+            builder.Property(p => p.Title)
                 .HasMaxLength(60)
                 .IsRequired();
 
-            builder.HasOne(e => e.GamePrices)
-                .WithOne()
-                .HasForeignKey<Price>(e => e.Id)
+            builder.Property(p => p.Price)
+                .HasColumnType("money")
                 .IsRequired();
 
             builder.HasMany(g => g.Genres)
                 .WithMany(g => g.Games)
                 .UsingEntity(j => j.ToTable("GameGenres"));
 
-            builder.HasMany(e => e.PlayerGames)
-                .WithOne(e => e.Game)
-                .HasForeignKey(e => e.GameId)
-                .IsRequired(false);
+            builder.HasMany(e => e.Dlcs)
+                .WithOne()
+                .HasForeignKey(e => e.Id);
 
             builder.HasOne(e => e.Studio)
                 .WithMany()

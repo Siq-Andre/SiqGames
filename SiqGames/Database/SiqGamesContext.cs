@@ -12,11 +12,9 @@ namespace SiqGames.Database
         public DbSet<Studio> Studios { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Game> Games { get; set; }
-        public DbSet<Price> GamePrices { get; set; }
         public DbSet<Sale> Sales { get; set; }
-        public DbSet<PlayerGame> PlayerGames { get; set; }
-        public DbSet<PlayerStudio> PlayerStudios { get; set; }
-        public DbSet<PlayerFriend> PlayerFriends { get; set; }      
+        public DbSet<Game> Dlcs { get; set; }
+        public DbSet<PlayerPlayer> PlayerPlayers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,11 +22,9 @@ namespace SiqGames.Database
             modelBuilder.ApplyConfiguration(new StudioConfigurations());
             modelBuilder.ApplyConfiguration(new GenreConfigurations());
             modelBuilder.ApplyConfiguration(new GameConfigurations());
-            modelBuilder.ApplyConfiguration(new PriceConfigurations());
             modelBuilder.ApplyConfiguration(new SaleConfigurations());
-            modelBuilder.ApplyConfiguration(new PlayerGameConfigurations());
-            modelBuilder.ApplyConfiguration(new PlayerStudioConfigurations());
-            modelBuilder.ApplyConfiguration(new PlayerFriendConfigurations());
+            modelBuilder.ApplyConfiguration(new DlcConfigurations());
+            modelBuilder.ApplyConfiguration(new PlayerPlayerConfigurations());
         }
     }
 }

@@ -10,9 +10,9 @@ namespace SiqGames.Configurations
         {
             builder.HasKey(x => x.Id);
 
-            builder.HasOne(e => e.GamePrice)
-                .WithMany(e => e.Sales)
-                .HasForeignKey(e => e.GamePriceId)
+            builder.HasOne(e => e.Game)
+                .WithMany()
+                .HasForeignKey(e => e.Id)
                 .IsRequired();
 
             builder.Property(p => p.FinalPrice)

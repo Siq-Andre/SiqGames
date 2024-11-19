@@ -4,15 +4,26 @@ using SiqGames.Entities;
 
 namespace SiqGames.Configurations
 {
-    public class PriceConfigurations: IEntityTypeConfiguration<Price>
+    public class PlayerPlayerConfigurations: IEntityTypeConfiguration<PlayerPlayer>
     {
-        public void Configure (EntityTypeBuilder<Price> builder)
+        public void Configure (EntityTypeBuilder<PlayerPlayer> builder)
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(p => p.Cost)
-                .HasColumnType("money")
-                .IsRequired();
+            builder.HasOne(e => e.Player1)
+                .WithMany(e => e.Player1Friends)
+                .HasForeignKey(p => p.Player1Id)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(e => e.Player2)
+                .WithMany(e => e.Player2Friends)
+                .HasForeignKey(p => p.Player2Id)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.ToTable(b => b.HasCheckConstraint("CK_Player1Id_LessThan_Player2Id", "[Player1Id] < [Player2Id]"));
+
 
             builder.Property(p => p.DateTimeCreated)
                 .IsRequired()
@@ -25,7 +36,6 @@ namespace SiqGames.Configurations
 
             builder.Property(p => p.DateTimeModified)
                 .IsRequired()
-                .ValueGeneratedOnAddOrUpdate()
                 .HasDefaultValueSql("getdate()");
 
             builder.Property(p => p.UserModified)
