@@ -27,7 +27,7 @@ namespace SiqGames.Controllers
             try
             {
                 _playerDAL.Add(player);
-                return CreatedAtAction(nameof(AddPlayer), new { id = player.PlayerId }, player);
+                return CreatedAtAction(nameof(AddPlayer), new { id = player.Id }, player);
             }
             catch (Exception ex)
             {
@@ -52,7 +52,7 @@ namespace SiqGames.Controllers
         [HttpGet("select/{id}")]
         public IActionResult GetPlayerById(int id)
         {
-            var Player = _playerDAL.GetBy(a => a.PlayerId.Equals(id));
+            var Player = _playerDAL.GetBy(a => a.Id.Equals(id));
             if (Player == null)
             {
                 return NotFound();
@@ -68,7 +68,7 @@ namespace SiqGames.Controllers
                 return BadRequest("Player data is invalid.");
             }
 
-            var existingPlayer = _playerDAL.Get().FirstOrDefault(a => a.PlayerId == id);
+            var existingPlayer = _playerDAL.Get().FirstOrDefault(a => a.Id == id);
             if (existingPlayer == null)
             {
                 return NotFound();
@@ -87,7 +87,7 @@ namespace SiqGames.Controllers
         [HttpDelete("delete/{id}")]
         public IActionResult DeletePlayer(int id)
         {
-            var player = _playerDAL.Get().FirstOrDefault(a => a.PlayerId == id);
+            var player = _playerDAL.Get().FirstOrDefault(a => a.Id == id);
             if (player == null)
             {
                 return NotFound(); 

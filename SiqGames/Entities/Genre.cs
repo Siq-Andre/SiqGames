@@ -3,6 +3,6 @@
     public class Genre : Entity<int>
     {
         public string GenreName { get; set; }
-        public List<GameGenre>? GameGenres { get; set; }
+        public ICollection<Game> Games { get; set; }
     }
 }

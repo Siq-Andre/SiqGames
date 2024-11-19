@@ -26,7 +26,7 @@ namespace SiqGames.Controllers
             try
             {
                 _genreDAL.Add(genre);
-                return CreatedAtAction(nameof(AddGenre), new { id = genre.GenreId }, genre);
+                return CreatedAtAction(nameof(AddGenre), new { id = genre.Id }, genre);
             }
             catch (Exception ex)
             {
@@ -51,7 +51,7 @@ namespace SiqGames.Controllers
         [HttpGet("select/{id}")]
         public IActionResult GetGenreById(int id)
         {
-            var Genre = _genreDAL.GetBy(a => a.GenreId.Equals(id));
+            var Genre = _genreDAL.GetBy(a => a.Id.Equals(id));
             if (Genre == null)
             {
                 return NotFound();
@@ -67,7 +67,7 @@ namespace SiqGames.Controllers
                 return BadRequest("Genre data is invalid.");
             }
 
-            var existingGenre = _genreDAL.Get().FirstOrDefault(a => a.GenreId == id);
+            var existingGenre = _genreDAL.Get().FirstOrDefault(a => a.Id == id);
             if (existingGenre == null)
             {
                 return NotFound();
@@ -83,7 +83,7 @@ namespace SiqGames.Controllers
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteGenre(int id)
         {
-            var genre = _genreDAL.Get().FirstOrDefault(a => a.GenreId == id);
+            var genre = _genreDAL.Get().FirstOrDefault(a => a.Id == id);
             if (genre == null)
             {
                 return NotFound();

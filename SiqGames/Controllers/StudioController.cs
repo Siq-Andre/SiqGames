@@ -26,7 +26,7 @@ namespace SiqGames.Controllers
             try
             {
                 _studioDAL.Add(studio);
-                return CreatedAtAction(nameof(AddStudio), new { id = studio.StudioId }, studio);
+                return CreatedAtAction(nameof(AddStudio), new { id = studio.Id }, studio);
             }
             catch (Exception ex)
             {
@@ -51,7 +51,7 @@ namespace SiqGames.Controllers
         [HttpGet("select/{id}")]
         public IActionResult GetStudioById(int id)
         {
-            var Studio = _studioDAL.GetBy(a => a.StudioId.Equals(id));
+            var Studio = _studioDAL.GetBy(a => a.Id.Equals(id));
             if (Studio == null)
             {
                 return NotFound();
@@ -67,7 +67,7 @@ namespace SiqGames.Controllers
                 return BadRequest("Studio data is invalid.");
             }
 
-            var existingStudio = _studioDAL.Get().FirstOrDefault(a => a.StudioId == id);
+            var existingStudio = _studioDAL.Get().FirstOrDefault(a => a.Id == id);
             if (existingStudio == null)
             {
                 return NotFound();
@@ -82,7 +82,7 @@ namespace SiqGames.Controllers
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteStudio(int id)
         {
-            var studio = _studioDAL.Get().FirstOrDefault(a => a.StudioId == id);
+            var studio = _studioDAL.Get().FirstOrDefault(a => a.Id == id);
             if (studio == null)
             {
                 return NotFound();

@@ -12,8 +12,8 @@ using SiqGames.Database;
 namespace SiqGames.Migrations
 {
     [DbContext(typeof(SiqGamesContext))]
-    [Migration("20241112175159_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20241119112950_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,13 +25,25 @@ namespace SiqGames.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("SiqGames.Entities.Game", b =>
+            modelBuilder.Entity("GameGenre", b =>
                 {
-                    b.Property<int>("GameId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("GamesId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GameId"));
+                    b.Property<int>("GenresId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GamesId", "GenresId");
+
+                    b.HasIndex("GenresId");
+
+                    b.ToTable("GameGenres", (string)null);
+                });
+
+            modelBuilder.Entity("SiqGames.Entities.Game", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateTimeCreated")
                         .ValueGeneratedOnAdd()
@@ -39,7 +51,7 @@ namespace SiqGames.Migrations
                         .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime>("DateTimeModified")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
@@ -58,9 +70,6 @@ namespace SiqGames.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<int>("StudioId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserCreated")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -75,67 +84,15 @@ namespace SiqGames.Migrations
                         .HasColumnType("nvarchar(30)")
                         .HasDefaultValue("admin");
 
-                    b.HasKey("GameId");
-
-                    b.HasIndex("StudioId");
+                    b.HasKey("Id");
 
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("SiqGames.Entities.GameGenre", b =>
-                {
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GenreId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateTimeCreated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<DateTime>("DateTimeModified")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<string>("UserCreated")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasDefaultValue("admin");
-
-                    b.Property<string>("UserModified")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasDefaultValue("admin");
-
-                    b.HasKey("GameId", "GenreId");
-
-                    b.HasIndex("GenreId");
-
-                    b.ToTable("GameGenres");
-                });
-
             modelBuilder.Entity("SiqGames.Entities.GamePrice", b =>
                 {
-                    b.Property<int>("GamePriceID")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Id")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GamePriceID"));
 
                     b.Property<DateTime>("DateTimeCreated")
                         .ValueGeneratedOnAdd()
@@ -143,15 +100,9 @@ namespace SiqGames.Migrations
                         .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime>("DateTimeModified")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -175,20 +126,18 @@ namespace SiqGames.Migrations
                         .HasColumnType("nvarchar(30)")
                         .HasDefaultValue("admin");
 
-                    b.HasKey("GamePriceID");
-
-                    b.HasIndex("GameId");
+                    b.HasKey("Id");
 
                     b.ToTable("GamePrices");
                 });
 
             modelBuilder.Entity("SiqGames.Entities.Genre", b =>
                 {
-                    b.Property<int>("GenreId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GenreId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DateTimeCreated")
                         .ValueGeneratedOnAdd()
@@ -204,9 +153,6 @@ namespace SiqGames.Migrations
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -227,18 +173,18 @@ namespace SiqGames.Migrations
                         .HasColumnType("nvarchar(30)")
                         .HasDefaultValue("admin");
 
-                    b.HasKey("GenreId");
+                    b.HasKey("Id");
 
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("SiqGames.Entities.Studio", b =>
+            modelBuilder.Entity("SiqGames.Entities.Player", b =>
                 {
-                    b.Property<int>("PlayerId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlayerId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateOnly>("BirthDate")
                         .HasColumnType("date");
@@ -262,9 +208,6 @@ namespace SiqGames.Migrations
                         .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -290,7 +233,7 @@ namespace SiqGames.Migrations
                         .HasColumnType("nvarchar(30)")
                         .HasDefaultValue("admin");
 
-                    b.HasKey("PlayerId");
+                    b.HasKey("Id");
 
                     b.ToTable("Players");
                 });
@@ -444,11 +387,8 @@ namespace SiqGames.Migrations
 
             modelBuilder.Entity("SiqGames.Entities.Sale", b =>
                 {
-                    b.Property<int>("SaleId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Id")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SaleId"));
 
                     b.Property<DateTime>("DateTimeCreated")
                         .ValueGeneratedOnAdd()
@@ -466,16 +406,10 @@ namespace SiqGames.Migrations
                     b.Property<int>("GamePriceId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
-
-                    b.Property<int>("PlayerId")
-                        .HasColumnType("int");
 
                     b.Property<string>("UserCreated")
                         .IsRequired()
@@ -491,22 +425,20 @@ namespace SiqGames.Migrations
                         .HasColumnType("nvarchar(30)")
                         .HasDefaultValue("admin");
 
-                    b.HasKey("SaleId");
+                    b.HasKey("Id");
 
                     b.HasIndex("GamePriceId");
-
-                    b.HasIndex("PlayerId");
 
                     b.ToTable("Sales");
                 });
 
             modelBuilder.Entity("SiqGames.Entities.Studio", b =>
                 {
-                    b.Property<int>("StudioId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudioId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DateTimeCreated")
                         .ValueGeneratedOnAdd()
@@ -517,9 +449,6 @@ namespace SiqGames.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -545,61 +474,55 @@ namespace SiqGames.Migrations
                         .HasColumnType("nvarchar(30)")
                         .HasDefaultValue("admin");
 
-                    b.HasKey("StudioId");
+                    b.HasKey("Id");
 
                     b.ToTable("Studios");
+                });
+
+            modelBuilder.Entity("GameGenre", b =>
+                {
+                    b.HasOne("SiqGames.Entities.Game", null)
+                        .WithMany()
+                        .HasForeignKey("GamesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SiqGames.Entities.Genre", null)
+                        .WithMany()
+                        .HasForeignKey("GenresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("SiqGames.Entities.Game", b =>
                 {
                     b.HasOne("SiqGames.Entities.Studio", "Studio")
-                        .WithMany("Games")
-                        .HasForeignKey("StudioId")
+                        .WithMany()
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Studio");
                 });
 
-            modelBuilder.Entity("SiqGames.Entities.GameGenre", b =>
-                {
-                    b.HasOne("SiqGames.Entities.Game", "Game")
-                        .WithMany("GameGenres")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SiqGames.Entities.Genre", "Genre")
-                        .WithMany("GameGenres")
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Game");
-
-                    b.Navigation("Genre");
-                });
-
             modelBuilder.Entity("SiqGames.Entities.GamePrice", b =>
                 {
-                    b.HasOne("SiqGames.Entities.Game", "Game")
-                        .WithMany("GamePrices")
-                        .HasForeignKey("GameId")
+                    b.HasOne("SiqGames.Entities.Game", null)
+                        .WithOne("GamePrices")
+                        .HasForeignKey("SiqGames.Entities.GamePrice", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Game");
                 });
 
             modelBuilder.Entity("SiqGames.Entities.PlayerFriend", b =>
                 {
-                    b.HasOne("SiqGames.Entities.Studio", "Player1")
+                    b.HasOne("SiqGames.Entities.Player", "Player1")
                         .WithMany("Player1Friends")
                         .HasForeignKey("Player1Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("SiqGames.Entities.Studio", "Player2")
+                    b.HasOne("SiqGames.Entities.Player", "Player2")
                         .WithMany("Player2Friends")
                         .HasForeignKey("Player2Id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -618,7 +541,7 @@ namespace SiqGames.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SiqGames.Entities.Studio", "Studio")
+                    b.HasOne("SiqGames.Entities.Player", "Player")
                         .WithMany("PlayerGames")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -626,12 +549,12 @@ namespace SiqGames.Migrations
 
                     b.Navigation("Game");
 
-                    b.Navigation("Studio");
+                    b.Navigation("Player");
                 });
 
             modelBuilder.Entity("SiqGames.Entities.PlayerStudio", b =>
                 {
-                    b.HasOne("SiqGames.Entities.Studio", "Studio")
+                    b.HasOne("SiqGames.Entities.Player", "Player")
                         .WithMany("PlayerStudios")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -643,7 +566,7 @@ namespace SiqGames.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Studio");
+                    b.Navigation("Player");
 
                     b.Navigation("Studio");
                 });
@@ -656,22 +579,17 @@ namespace SiqGames.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SiqGames.Entities.Studio", "Studio")
+                    b.HasOne("SiqGames.Entities.Player", null)
                         .WithMany("Sales")
-                        .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Id");
 
                     b.Navigation("GamePrice");
-
-                    b.Navigation("Studio");
                 });
 
             modelBuilder.Entity("SiqGames.Entities.Game", b =>
                 {
-                    b.Navigation("GameGenres");
-
-                    b.Navigation("GamePrices");
+                    b.Navigation("GamePrices")
+                        .IsRequired();
 
                     b.Navigation("PlayerGames");
                 });
@@ -681,12 +599,7 @@ namespace SiqGames.Migrations
                     b.Navigation("Sales");
                 });
 
-            modelBuilder.Entity("SiqGames.Entities.Genre", b =>
-                {
-                    b.Navigation("GameGenres");
-                });
-
-            modelBuilder.Entity("SiqGames.Entities.Studio", b =>
+            modelBuilder.Entity("SiqGames.Entities.Player", b =>
                 {
                     b.Navigation("Player1Friends");
 
@@ -701,8 +614,6 @@ namespace SiqGames.Migrations
 
             modelBuilder.Entity("SiqGames.Entities.Studio", b =>
                 {
-                    b.Navigation("Games");
-
                     b.Navigation("PlayerStudios");
                 });
 #pragma warning restore 612, 618

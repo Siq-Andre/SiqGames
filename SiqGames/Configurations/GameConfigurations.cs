@@ -19,10 +19,9 @@ namespace SiqGames.Configurations
                 .HasForeignKey<GamePrice>(e => e.Id)
                 .IsRequired();
 
-            builder.HasMany(e => e.GameGenres)
-                .WithOne(e => e.Game)
-                .HasForeignKey(e => e.GameId)
-                .IsRequired(false);
+            builder.HasMany(g => g.Genres)
+                .WithMany(g => g.Games)
+                .UsingEntity(j => j.ToTable("GameGenres"));
 
             builder.HasMany(e => e.PlayerGames)
                 .WithOne(e => e.Game)
@@ -30,7 +29,7 @@ namespace SiqGames.Configurations
                 .IsRequired(false);
 
             builder.HasOne(e => e.Studio)
-                .WithMany(e => e.Games)
+                .WithMany()
                 .HasForeignKey(e => e.Id)
                 .IsRequired();
 

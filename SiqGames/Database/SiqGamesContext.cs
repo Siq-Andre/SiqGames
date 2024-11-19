@@ -16,7 +16,6 @@ namespace SiqGames.Database
         public DbSet<Sale> Sales { get; set; }
         public DbSet<PlayerGame> PlayerGames { get; set; }
         public DbSet<PlayerStudio> PlayerStudios { get; set; }
-        public DbSet<GameGenre> GameGenres { get; set; }
         public DbSet<PlayerFriend> PlayerFriends { get; set; }      
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,7 +28,6 @@ namespace SiqGames.Database
             modelBuilder.ApplyConfiguration(new  SaleConfigurations());
             modelBuilder.ApplyConfiguration(new PlayerGameConfigurations());
             modelBuilder.ApplyConfiguration(new PlayerStudioConfigurations());
-            modelBuilder.ApplyConfiguration(new GameGenreConfigurations());
             modelBuilder.ApplyConfiguration(new PlayerFriendConfigurations());
         }
     }

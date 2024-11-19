@@ -14,11 +14,6 @@ namespace SiqGames.Configurations
                 .IsRequired()
                 .HasMaxLength(20);
 
-            builder.HasMany(e => e.GameGenres)
-                .WithOne(e => e.Genre)
-                .HasForeignKey(e => e.GenreId)
-                .IsRequired(false);
-
             builder.Property(p => p.DateTimeCreated)
                 .IsRequired()
                 .HasDefaultValueSql("getdate()");
