@@ -1,8 +1,8 @@
 ﻿namespace SiqGames.Entities
 {
-    public class GamePrice: Entity<int>
+    public class Price: Entity<int>
     {
-        public decimal Price { get; set; }
+        public decimal Cost { get; set; }
         public ICollection<Sale>? Sales { get; set; }
     }
 }

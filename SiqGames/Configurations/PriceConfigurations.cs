@@ -4,13 +4,13 @@ using SiqGames.Entities;
 
 namespace SiqGames.Configurations
 {
-    public class GamePriceConfigurations: IEntityTypeConfiguration<GamePrice>
+    public class PriceConfigurations: IEntityTypeConfiguration<Price>
     {
-        public void Configure (EntityTypeBuilder<GamePrice> builder)
+        public void Configure (EntityTypeBuilder<Price> builder)
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(p => p.Price)
+            builder.Property(p => p.Cost)
                 .HasColumnType("money")
                 .IsRequired();
 

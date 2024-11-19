@@ -16,7 +16,7 @@ namespace SiqGames.Configurations
 
             builder.HasOne(e => e.GamePrices)
                 .WithOne()
-                .HasForeignKey<GamePrice>(e => e.Id)
+                .HasForeignKey<Price>(e => e.Id)
                 .IsRequired();
 
             builder.HasMany(g => g.Genres)

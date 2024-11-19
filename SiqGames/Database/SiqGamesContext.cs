@@ -12,7 +12,7 @@ namespace SiqGames.Database
         public DbSet<Studio> Studios { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Game> Games { get; set; }
-        public DbSet<GamePrice> GamePrices { get; set; }
+        public DbSet<Price> GamePrices { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<PlayerGame> PlayerGames { get; set; }
         public DbSet<PlayerStudio> PlayerStudios { get; set; }
@@ -24,8 +24,8 @@ namespace SiqGames.Database
             modelBuilder.ApplyConfiguration(new StudioConfigurations());
             modelBuilder.ApplyConfiguration(new GenreConfigurations());
             modelBuilder.ApplyConfiguration(new GameConfigurations());
-            modelBuilder.ApplyConfiguration(new GamePriceConfigurations());
-            modelBuilder.ApplyConfiguration(new  SaleConfigurations());
+            modelBuilder.ApplyConfiguration(new PriceConfigurations());
+            modelBuilder.ApplyConfiguration(new SaleConfigurations());
             modelBuilder.ApplyConfiguration(new PlayerGameConfigurations());
             modelBuilder.ApplyConfiguration(new PlayerStudioConfigurations());
             modelBuilder.ApplyConfiguration(new PlayerFriendConfigurations());
