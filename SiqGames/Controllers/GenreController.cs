@@ -86,7 +86,7 @@ namespace SiqGames.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while updating the game: {ex.Message}");
+                return StatusCode(500, $"An error occurred while updating the genre: {ex.Message}");
             }
 
         }
