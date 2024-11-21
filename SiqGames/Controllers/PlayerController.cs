@@ -9,11 +9,11 @@ namespace SiqGames.Controllers
     public class PlayerController : Controller
     {
 
-        private DAL<Player> _playerDAL;
+        protected readonly SiqGamesContext context;
 
-        public PlayerController(DAL<Player> PlayerDAL)
+        public PlayerController(SiqGamesContext context)
         {
-            _playerDAL = PlayerDAL;
+            this.context = context;
         }
 
         [HttpPost]
@@ -26,7 +26,8 @@ namespace SiqGames.Controllers
 
             try
             {
-                _playerDAL.Add(player);
+                context.Add(player);
+                context.SaveChanges();
                 return CreatedAtAction(nameof(AddPlayer), new { id = player.Id }, player);
             }
             catch (Exception ex)
@@ -40,8 +41,8 @@ namespace SiqGames.Controllers
         {
             try
             {
-                var players = _playerDAL.Get();
-                return Ok(players);
+                var player = context.Set<Player>().ToList();
+                return Ok(player);
             }
             catch (Exception ex)
             {
@@ -52,7 +53,7 @@ namespace SiqGames.Controllers
         [HttpGet("select/{id}")]
         public IActionResult GetPlayerById(int id)
         {
-            var Player = _playerDAL.GetBy(a => a.Id.Equals(id));
+            var Player = context.Set<Player>().FirstOrDefault(a => a.Id.Equals(id));
             if (Player == null)
             {
                 return NotFound();
@@ -68,7 +69,7 @@ namespace SiqGames.Controllers
                 return BadRequest("Player data is invalid.");
             }
 
-            var existingPlayer = _playerDAL.Get().FirstOrDefault(a => a.Id == id);
+            var existingPlayer = context.Set<Player>().FirstOrDefault(a => a.Id.Equals(id));
             if (existingPlayer == null)
             {
                 return NotFound();
@@ -80,20 +81,31 @@ namespace SiqGames.Controllers
             existingPlayer.BirthDate = player.BirthDate;
             existingPlayer.UserModified = player.UserModified;
 
-            _playerDAL.Update(existingPlayer);
-            return Ok(existingPlayer); 
+            try
+            {
+                context.Set<Player>().Update(existingPlayer);
+                context.SaveChanges();
+                return Ok(existingPlayer);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while updating the player: {ex.Message}");
+            }
+
         }
 
         [HttpDelete("delete/{id}")]
         public IActionResult DeletePlayer(int id)
         {
-            var player = _playerDAL.Get().FirstOrDefault(a => a.Id == id);
+            var player = context.Set<Player>().FirstOrDefault(a => a.Id.Equals(id));
             if (player == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
 
-            _playerDAL.Delete(player);
+            context.Set<Player>().Remove(player);
+            context.SaveChanges();
+
             return Ok(player);
         }
 

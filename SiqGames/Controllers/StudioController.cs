@@ -8,11 +8,11 @@ namespace SiqGames.Controllers
     [Route("api/[Controller]")]
     public class StudioController : Controller
     {
-        private DAL<Studio> _studioDAL;
+        protected readonly SiqGamesContext context;
 
-        public StudioController(DAL<Studio> StudioDAL)
+        public StudioController(SiqGamesContext context)
         {
-            _studioDAL = StudioDAL;
+            this.context = context;
         }
 
         [HttpPost]
@@ -25,7 +25,8 @@ namespace SiqGames.Controllers
 
             try
             {
-                _studioDAL.Add(studio);
+                context.Add(studio);
+                context.SaveChanges();
                 return CreatedAtAction(nameof(AddStudio), new { id = studio.Id }, studio);
             }
             catch (Exception ex)
@@ -39,8 +40,8 @@ namespace SiqGames.Controllers
         {
             try
             {
-                var studios = _studioDAL.Get();
-                return Ok(studios);
+                var studio = context.Set<Studio>().ToList();
+                return Ok(studio);
             }
             catch (Exception ex)
             {
@@ -51,7 +52,7 @@ namespace SiqGames.Controllers
         [HttpGet("select/{id}")]
         public IActionResult GetStudioById(int id)
         {
-            var Studio = _studioDAL.GetBy(a => a.Id.Equals(id));
+            var Studio = context.Set<Studio>().FirstOrDefault(a => a.Id.Equals(id));
             if (Studio == null)
             {
                 return NotFound();
@@ -60,36 +61,48 @@ namespace SiqGames.Controllers
         }
 
         [HttpPut("update/{id}")]
-        public IActionResult UpdateStudio(int id, [FromBody] Studio studio)
+        public IActionResult UpdateStudio(int id, [FromBody] Studio Studio)
         {
-            if (studio == null)
+            if (Studio == null)
             {
                 return BadRequest("Studio data is invalid.");
             }
 
-            var existingStudio = _studioDAL.Get().FirstOrDefault(a => a.Id == id);
+            var existingStudio = context.Set<Studio>().FirstOrDefault(a => a.Id.Equals(id));
             if (existingStudio == null)
             {
                 return NotFound();
             }
 
-            existingStudio.StudioName = studio.StudioName;
+            existingStudio.StudioName = Studio.StudioName;
+            existingStudio.UserModified = Studio.UserModified;
 
-            _studioDAL.Update(existingStudio);
-            return Ok(existingStudio);
+            try
+            {
+                context.Set<Studio>().Update(existingStudio);
+                context.SaveChanges();
+                return Ok(existingStudio);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while updating the game: {ex.Message}");
+            }
+
         }
 
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteStudio(int id)
         {
-            var studio = _studioDAL.Get().FirstOrDefault(a => a.Id == id);
-            if (studio == null)
+            var Studio = context.Set<Studio>().FirstOrDefault(a => a.Id.Equals(id));
+            if (Studio == null)
             {
                 return NotFound();
             }
 
-            _studioDAL.Delete(studio);
-            return Ok(studio);
+            context.Set<Studio>().Remove(Studio);
+            context.SaveChanges();
+
+            return Ok(Studio);
         }
     }
 }

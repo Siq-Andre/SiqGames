@@ -94,7 +94,7 @@ namespace SiqGames.Controllers
         }
 
         [HttpDelete("delete/{id}")]
-        public IActionResult Deletegame(int id)
+        public IActionResult DeleteGame(int id)
         {
             var game = context.Set<Game>().FirstOrDefault(a => a.Id.Equals(id));
             if (game == null)
