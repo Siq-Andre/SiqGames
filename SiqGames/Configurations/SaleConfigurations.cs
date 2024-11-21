@@ -15,6 +15,11 @@ namespace SiqGames.Configurations
                 .HasForeignKey(e => e.Id)
                 .IsRequired();
 
+            builder.HasOne(e => e.Dlc)
+                .WithMany()
+                .HasForeignKey(e => e.Id)
+                .IsRequired();
+
             builder.Property(p => p.FinalPrice)
                 .HasColumnType("money")
                 .IsRequired();
