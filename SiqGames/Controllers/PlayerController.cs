@@ -80,6 +80,7 @@ namespace SiqGames.Controllers
             existingPlayer.Email = player.Email;
             existingPlayer.BirthDate = player.BirthDate;
             existingPlayer.UserModified = player.UserModified;
+            existingPlayer.IsActive = player.IsActive;
 
             try
             {

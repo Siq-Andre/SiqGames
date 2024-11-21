@@ -76,6 +76,7 @@ namespace SiqGames.Controllers
 
             existingGenre.GenreName = genre.GenreName;
             existingGenre.UserModified = genre.UserModified;
+            existingGenre.IsActive = genre.IsActive;
 
             try
             {

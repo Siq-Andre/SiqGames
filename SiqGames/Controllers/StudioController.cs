@@ -76,6 +76,7 @@ namespace SiqGames.Controllers
 
             existingStudio.StudioName = Studio.StudioName;
             existingStudio.UserModified = Studio.UserModified;
+            existingStudio.IsActive = Studio.IsActive;
 
             try
             {

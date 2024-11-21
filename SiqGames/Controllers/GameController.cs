@@ -78,7 +78,8 @@ namespace SiqGames.Controllers
             existingGame.Title = game.Title;
             existingGame.Price = game.Price;
             existingGame.Description = game.Description;
-            existingGame.UserModified = game.UserModified;       
+            existingGame.UserModified = game.UserModified;  
+            existingGame.IsActive = game.IsActive;
 
             try
             {
