@@ -93,6 +93,21 @@ namespace SiqGames.Controllers
 
         }
 
+        [HttpDelete("delete/{id}")]
+        public IActionResult Deletegame(int id)
+        {
+            var game = context.Set<Game>().FirstOrDefault(a => a.Id.Equals(id));
+            if (game == null)
+            {
+                return NotFound();
+            }
+
+            context.Set<Game>().Remove(game);
+            context.SaveChanges();
+
+            return Ok(game);
+        }
+
 
     }
 }
