@@ -8,17 +8,22 @@ namespace SiqGames.Configurations
     {
         public void Configure (EntityTypeBuilder<Sale> builder)
         {
-            builder.HasKey(x => x.SaleId);
+            builder.HasKey(x => x.Id);
 
-            builder.HasOne(e => e.Player)
-                .WithMany(e => e.Sales)
-                .HasForeignKey(e => e.PlayerId)
+            builder.Property(e => e.Id)
+                .HasColumnName($"{nameof(Sale)}Id")
+                .ValueGeneratedOnAdd()
                 .IsRequired();
 
-            builder.HasOne(e => e.GamePrice)
-                .WithMany(e => e.Sales)
-                .HasForeignKey(e => e.GamePriceId)
-                .IsRequired();
+            builder.HasOne(e => e.Game)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction)
+                .IsRequired(false);
+
+            builder.HasOne(e => e.Dlc)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction)
+                .IsRequired(false);
 
             builder.Property(p => p.FinalPrice)
                 .HasColumnType("money")

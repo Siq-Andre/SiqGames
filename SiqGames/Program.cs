@@ -17,8 +17,6 @@ builder.Services.AddDbContext<SiqGamesContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<DAL<Player>>();
-builder.Services.AddScoped<DAL<Genre>>();
 
 var app = builder.Build();
 

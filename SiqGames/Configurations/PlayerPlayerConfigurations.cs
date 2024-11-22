@@ -4,21 +4,24 @@ using SiqGames.Entities;
 
 namespace SiqGames.Configurations
 {
-    public class PlayerStudioConfigurations: IEntityTypeConfiguration<PlayerStudio>
+    public class PlayerPlayerConfigurations: IEntityTypeConfiguration<PlayerPlayer>
     {
-        public void Configure (EntityTypeBuilder<PlayerStudio> builder)
+        public void Configure (EntityTypeBuilder<PlayerPlayer> builder)
         {
-            builder.HasKey(p => new { p.PlayerId, p.StudioId });
+            builder.HasKey(x => x.Id);
 
-            builder.HasOne(e => e.Player)
-                .WithMany(e => e.PlayerStudios)
-                .HasForeignKey(e => e.PlayerId)
-                .IsRequired();
+            builder.HasOne(e => e.Player1)
+                .WithMany(e => e.Player1Friends)
+                //.HasForeignKey("PlayerId1")
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(e => e.Studio)
-                .WithMany(e => e.PlayerStudios)
-                .HasForeignKey(e => e.StudioId)
-                .IsRequired();
+            builder.HasOne(e => e.Player2)
+                .WithMany(e => e.Player2Friends)
+                //.HasForeignKey("PlayerId2")
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             builder.Property(p => p.DateTimeCreated)
                 .IsRequired()

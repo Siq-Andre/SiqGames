@@ -5,14 +5,14 @@ using SiqGames.Entities;
 namespace SiqGames.Controllers
 {
     [ApiController]
-    [Route("[Controller]")]
+    [Route("api/[Controller]")]
     public class GenreController : Controller
     {
-        private DAL<Genre> _genreDAL;
+        protected readonly SiqGamesContext context;
 
-        public GenreController(DAL<Genre> GenreDAL)
+        public GenreController(SiqGamesContext context)
         {
-            _genreDAL = GenreDAL;
+            this.context = context;
         }
 
         [HttpPost]
@@ -25,12 +25,13 @@ namespace SiqGames.Controllers
 
             try
             {
-                _genreDAL.Add(genre);
-                return CreatedAtAction(nameof(AddGenre), new { id = genre.GenreId }, genre);
+                context.Add(genre);
+                context.SaveChanges();
+                return CreatedAtAction(nameof(AddGenre), new { id = genre.Id }, genre);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, "Internal server error:" + ex.Message);
             }
         }
 
@@ -39,19 +40,19 @@ namespace SiqGames.Controllers
         {
             try
             {
-                var genres = _genreDAL.Get();
-                return Ok(genres);
+                var genre = context.Set<Genre>().ToList();
+                return Ok(genre);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, "Internal server error:" + ex.Message);
             }
         }
 
         [HttpGet("select/{id}")]
         public IActionResult GetGenreById(int id)
         {
-            var Genre = _genreDAL.GetBy(a => a.GenreId.Equals(id));
+            var Genre = context.Set<Genre>().FirstOrDefault(a => a.Id.Equals(id));
             if (Genre == null)
             {
                 return NotFound();
@@ -67,7 +68,7 @@ namespace SiqGames.Controllers
                 return BadRequest("Genre data is invalid.");
             }
 
-            var existingGenre = _genreDAL.Get().FirstOrDefault(a => a.GenreId == id);
+            var existingGenre = context.Set<Genre>().FirstOrDefault(a => a.Id.Equals(id));
             if (existingGenre == null)
             {
                 return NotFound();
@@ -75,21 +76,33 @@ namespace SiqGames.Controllers
 
             existingGenre.GenreName = genre.GenreName;
             existingGenre.UserModified = genre.UserModified;
+            existingGenre.IsActive = genre.IsActive;
 
-            _genreDAL.Update(existingGenre);
-            return Ok(existingGenre);
+            try
+            {
+                context.Set<Genre>().Update(existingGenre);
+                context.SaveChanges();
+                return Ok(existingGenre);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred while updating the genre: {ex.Message}");
+            }
+
         }
 
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteGenre(int id)
         {
-            var genre = _genreDAL.Get().FirstOrDefault(a => a.GenreId == id);
+            var genre = context.Set<Genre>().FirstOrDefault(a => a.Id.Equals(id));
             if (genre == null)
             {
                 return NotFound();
             }
 
-            _genreDAL.Delete(genre);
+            context.Set<Genre>().Remove(genre);
+            context.SaveChanges();
+
             return Ok(genre);
         }
     }

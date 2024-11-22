@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SiqGames.Database;
 
@@ -11,9 +12,11 @@ using SiqGames.Database;
 namespace SiqGames.Migrations
 {
     [DbContext(typeof(SiqGamesContext))]
-    partial class SiqGamesContextModelSnapshot : ModelSnapshot
+    [Migration("20241122165357_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -377,7 +380,7 @@ namespace SiqGames.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<int>("PlayerId")
+                    b.Property<int?>("PlayerId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserCreated")
@@ -543,18 +546,18 @@ namespace SiqGames.Migrations
                     b.HasOne("SiqGames.Entities.Dlc", "Dlc")
                         .WithMany()
                         .HasForeignKey("DlcId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("SiqGames.Entities.Game", "Game")
                         .WithMany()
                         .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("SiqGames.Entities.Player", null)
                         .WithMany("Sales")
-                        .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PlayerId");
 
                     b.Navigation("Dlc");
 

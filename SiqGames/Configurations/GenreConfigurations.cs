@@ -8,16 +8,19 @@ namespace SiqGames.Configurations
     {
         public void Configure (EntityTypeBuilder<Genre> builder)
         {
-            builder.HasKey(x => x.GenreId);
+            builder.HasKey(x => x.Id);
+
+            builder.Property(e => e.Id)
+                .HasColumnName($"{nameof(Genre)}Id")
+                .ValueGeneratedOnAdd()
+                .IsRequired();
 
             builder.Property(p => p.GenreName)
                 .IsRequired()
                 .HasMaxLength(20);
 
-            builder.HasMany(e => e.GameGenres)
-                .WithOne(e => e.Genre)
-                .HasForeignKey(e => e.GenreId)
-                .IsRequired(false);
+            builder.HasIndex(p => p.GenreName)
+                .IsUnique();
 
             builder.Property(p => p.DateTimeCreated)
                 .IsRequired()
