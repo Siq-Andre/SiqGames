@@ -10,6 +10,11 @@ namespace SiqGames.Configurations
         {
             builder.HasKey(x => x.Id);
 
+            builder.Property(e => e.Id)
+                .HasColumnName($"{nameof(Dlc)}Id")
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+
             builder.Property(p => p.Title)
                 .HasMaxLength(60)
                 .IsRequired();

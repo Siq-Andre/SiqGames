@@ -10,6 +10,11 @@ namespace SiqGames.Configurations
         {
             builder.HasKey(k => k.Id);
 
+            builder.Property(e => e.Id)
+                .HasColumnName($"{nameof(Game)}Id")
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+
             builder.Property(p => p.Title)
                 .HasMaxLength(60)
                 .IsRequired();
@@ -23,12 +28,10 @@ namespace SiqGames.Configurations
                 .UsingEntity(j => j.ToTable("GameGenres"));
 
             builder.HasMany(e => e.Dlcs)
-                .WithOne()
-                .HasForeignKey(e => e.Id);
+                .WithOne();
 
             builder.HasOne(e => e.Studio)
                 .WithMany()
-                .HasForeignKey(e => e.Id)
                 .IsRequired();
 
             builder.Property(p => p.Description)

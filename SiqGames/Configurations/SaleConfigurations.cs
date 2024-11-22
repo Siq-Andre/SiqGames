@@ -10,15 +10,20 @@ namespace SiqGames.Configurations
         {
             builder.HasKey(x => x.Id);
 
+            builder.Property(e => e.Id)
+                .HasColumnName($"{nameof(Sale)}Id")
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+
             builder.HasOne(e => e.Game)
                 .WithMany()
-                .HasForeignKey(e => e.Id)
-                .IsRequired();
+                .OnDelete(DeleteBehavior.NoAction)
+                .IsRequired(false);
 
             builder.HasOne(e => e.Dlc)
                 .WithMany()
-                .HasForeignKey(e => e.Id)
-                .IsRequired();
+                .OnDelete(DeleteBehavior.NoAction)
+                .IsRequired(false);
 
             builder.Property(p => p.FinalPrice)
                 .HasColumnType("money")

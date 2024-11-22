@@ -10,9 +10,17 @@ namespace SiqGames.Configurations
         {
             builder.HasKey(x => x.Id);
 
+            builder.Property(e => e.Id)
+                .HasColumnName($"{nameof(Studio)}Id")
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+
             builder.Property(p => p.StudioName)
                 .HasMaxLength(30)
                 .IsRequired();
+
+            builder.HasIndex(p => p.StudioName)
+                .IsUnique();
 
             builder.Property(p => p.DateTimeCreated)
                 .IsRequired()

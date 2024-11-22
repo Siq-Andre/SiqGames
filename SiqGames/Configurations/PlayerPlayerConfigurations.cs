@@ -12,17 +12,15 @@ namespace SiqGames.Configurations
 
             builder.HasOne(e => e.Player1)
                 .WithMany(e => e.Player1Friends)
-                .HasForeignKey(p => p.Player1Id)
+                //.HasForeignKey("PlayerId1")
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(e => e.Player2)
                 .WithMany(e => e.Player2Friends)
-                .HasForeignKey(p => p.Player2Id)
+                //.HasForeignKey("PlayerId2")
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
-
-            builder.ToTable(b => b.HasCheckConstraint("CK_Player1Id_LessThan_Player2Id", "[Player1Id] < [Player2Id]"));
 
 
             builder.Property(p => p.DateTimeCreated)
