@@ -8,21 +8,19 @@ namespace SiqGames.Configurations
     {
         public void Configure (EntityTypeBuilder<Studio> builder)
         {
-            builder.HasKey(x => x.StudioId);
+            builder.HasKey(x => x.Id);
+
+            builder.Property(e => e.Id)
+                .HasColumnName($"{nameof(Studio)}Id")
+                .ValueGeneratedOnAdd()
+                .IsRequired();
 
             builder.Property(p => p.StudioName)
                 .HasMaxLength(30)
                 .IsRequired();
 
-            builder.HasMany(e => e.Games)
-                .WithOne(e => e.Studio)
-                .HasForeignKey(e => e.StudioId)
-                .IsRequired(false);
-
-            builder.HasMany(e => e.PlayerStudios)
-                .WithOne(e => e.Studio)
-                .HasForeignKey(e => e.StudioId)
-                .IsRequired(false);
+            builder.HasIndex(p => p.StudioName)
+                .IsUnique();
 
             builder.Property(p => p.DateTimeCreated)
                 .IsRequired()

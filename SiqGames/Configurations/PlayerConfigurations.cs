@@ -9,11 +9,19 @@ namespace SiqGames.Configurations
     {
         public void Configure (EntityTypeBuilder<Player> builder)
         {
-            builder.HasKey(p => p.PlayerId);
+            builder.HasKey(p => p.Id);
+
+            builder.Property(e => e.Id)
+                .HasColumnName($"{nameof(Game)}Id")
+                .ValueGeneratedOnAdd()
+                .IsRequired();
 
             builder.Property(p => p.Nickname)
-                .HasMaxLength(20)
+                .HasMaxLength(20)        
                 .IsRequired();
+
+            builder.HasIndex(p => p.Nickname)
+                .IsUnique();
 
             builder.Property(p => p.FullName)
                 .HasMaxLength(60)
@@ -23,50 +31,40 @@ namespace SiqGames.Configurations
                 .HasMaxLength(30)
                 .IsRequired();
 
-            builder.HasMany(e => e.PlayerGames)
-                .WithOne(e => e.Player)
-                .HasForeignKey(e => e.PlayerId)
-                .IsRequired(false);
+            builder.HasIndex(p => p.Email)
+                .IsUnique();
+
+            builder.HasMany(g => g.Games)
+                 .WithMany(g => g.Players)
+                 .UsingEntity(j => j.ToTable("PlayerGames"));
+
+            builder.HasMany(e => e.Sales)
+                .WithOne()
+                .IsRequired();
 
             builder.Property(e => e.BirthDate)
                 .IsRequired();
 
-            builder.HasMany(e => e.Player1Friends)
-                .WithOne(e => e.Player1)
-                .HasForeignKey(e => e.Player1Id)
-                .IsRequired(false);
-
-            builder.HasMany(e => e.Player2Friends)
-                .WithOne(e => e.Player2)
-                .HasForeignKey(e => e.Player2Id)
-                .IsRequired(false);
-
-            builder.HasMany(e => e.PlayerStudios)
-                .WithOne(e => e.Player)
-                .HasForeignKey(e => e.PlayerId)
-                .IsRequired(false);
+            builder.HasMany(g => g.Studios)
+                .WithMany(g => g.Players)
+                .UsingEntity(j => j.ToTable("PlayerStudios"));
 
             builder.Property(p => p.DateTimeCreated)
-                .IsRequired()
-                .HasDefaultValueSql("getdate()");
+                .IsRequired();
 
             builder.Property(p => p.UserCreated)
                 .HasMaxLength(30)
-                .IsRequired()
-                .HasDefaultValue("admin");
+                .IsRequired();
 
             builder.Property(p => p.DateTimeModified)
-                .IsRequired()
-                .HasDefaultValueSql("getdate()");
+                .IsRequired();
 
             builder.Property(p => p.UserModified)
                 .HasMaxLength(30)
-                .IsRequired()
-                .HasDefaultValue("admin");
+                .IsRequired();
 
             builder.Property(p => p.IsActive)
-                .IsRequired()
-                .HasDefaultValue(1);
+                .IsRequired();
         }
     }
 }
