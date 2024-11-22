@@ -4,6 +4,8 @@ using SiqGames.Entities;
 
 namespace SiqGames.Controllers
 {
+    [ApiController]
+    [Route("api/[Controller]")]
     public class DlcController : Controller
     {
         protected readonly SiqGamesContext context;
