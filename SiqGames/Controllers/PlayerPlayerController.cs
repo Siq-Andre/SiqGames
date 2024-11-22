@@ -74,10 +74,10 @@ namespace SiqGames.Controllers
                 return NotFound();
             }
 
-            existingPlayerPlayer.Player1Id = PlayerPlayer.Player1Id;
-            existingPlayerPlayer.Player2Id = PlayerPlayer.Player2Id;
-            existingPlayerPlayer.UserModified = PlayerPlayer.UserModified;
-            existingPlayerPlayer.IsActive = PlayerPlayer.IsActive;
+            //existingPlayerPlayer.Player1Id = PlayerPlayer.Player1Id;
+            //existingPlayerPlayer.Player2Id = PlayerPlayer.Player2Id;
+            //existingPlayerPlayer.UserModified = PlayerPlayer.UserModified;
+            //existingPlayerPlayer.IsActive = PlayerPlayer.IsActive;
 
             try
             {

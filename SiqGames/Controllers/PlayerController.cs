@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SiqGames.Database;
 using SiqGames.Entities;
+using SiqGames.ViewModels;
 
 namespace SiqGames.Controllers
 {
@@ -17,22 +18,48 @@ namespace SiqGames.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddPlayer([FromBody] Player player)
+        public IActionResult AddPlayer([FromBody] PlayerRequestViewModel playerViewModel)
         {
-            if (player == null)
+            if (playerViewModel == null)
             {
                 return BadRequest("Player data is required.");
             }
 
             try
             {
+
+                var checkPlayerExists = context.Players.Where(p => p.Nickname == playerViewModel.Nickname || p.Email == playerViewModel.Email).FirstOrDefault();
+
+                if (checkPlayerExists != null && checkPlayerExists.Nickname == playerViewModel.Nickname)
+                {
+                    return Conflict(new { message = "Nickname already exists" });                
+                }
+
+                else if (checkPlayerExists != null && checkPlayerExists.Email == playerViewModel.Email)
+                {
+                    return Conflict(new { message = "Email already exists" });
+                }
+
+                var player = new Player();
+
+                player.Nickname = playerViewModel.Nickname;
+                player.FullName = playerViewModel.FullName;
+                player.Email = playerViewModel.Email;
+                player.BirthDate = playerViewModel.BirthDate;
+                player.UserCreated = "Admin";
+                player.DateTimeCreated = DateTime.Now;
+                player.UserModified = "Admin";
+                player.DateTimeModified =  DateTime.Now;
+                player.IsActive = true;
+
                 context.Add(player);
                 context.SaveChanges();
-                return CreatedAtAction(nameof(AddPlayer), new { id = player.Id }, player);
+                return CreatedAtAction(nameof(AddPlayer), new { id = player.Id }, playerViewModel);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error:" + ex.Message);
+                var x = 1;
+                return StatusCode(500, new { message = "Internal server error:" + ex.Message });
             }
         }
 
@@ -90,7 +117,7 @@ namespace SiqGames.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while updating the player: {ex.Message}");
+                return StatusCode(500, $"An error occurred while updating the playerViewModel: {ex.Message}");
             }
 
         }
