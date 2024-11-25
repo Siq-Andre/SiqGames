@@ -4,9 +4,9 @@ using SiqGames.Entities;
 
 namespace SiqGames.Configurations
 {
-    public class GenreConfigurations: IEntityTypeConfiguration<Genre>
+    public class GenreConfigurations : IEntityTypeConfiguration<Genre>
     {
-        public void Configure (EntityTypeBuilder<Genre> builder)
+        public void Configure(EntityTypeBuilder<Genre> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -23,26 +23,21 @@ namespace SiqGames.Configurations
                 .IsUnique();
 
             builder.Property(p => p.DateTimeCreated)
-                .IsRequired()
-                .HasDefaultValueSql("getdate()");
+                .IsRequired();
 
             builder.Property(p => p.UserCreated)
                 .HasMaxLength(30)
-                .IsRequired()
-                .HasDefaultValue("admin");
+                .IsRequired();
 
             builder.Property(p => p.DateTimeModified)
-                .IsRequired()
-                .HasDefaultValueSql("getdate()");
+                .IsRequired();
 
             builder.Property(p => p.UserModified)
                 .HasMaxLength(30)
-                .IsRequired()
-                .HasDefaultValue("admin");
+                .IsRequired();
 
             builder.Property(p => p.IsActive)
-                .IsRequired()
-                .HasDefaultValue(1);
+                .IsRequired();
         }
     }
 }
