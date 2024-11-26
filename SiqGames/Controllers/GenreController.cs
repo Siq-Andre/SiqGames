@@ -22,7 +22,7 @@ namespace SiqGames.Controllers
         {
             if (genreRequestViewModel == null)
             {
-                return BadRequest(new { message = "Player data is required." });
+                return BadRequest(new { message = "Genre data is required." });
             }
 
             try
