@@ -100,19 +100,11 @@ namespace SiqGames.Controllers
             {
                 return NotFound();
             }
-
-            existingPlayer.Nickname = playerViewModel.Nickname;
-            existingPlayer.FullName = playerViewModel.FullName;
-            existingPlayer.Email = playerViewModel.Email;
-            existingPlayer.BirthDate = playerViewModel.BirthDate;
-            existingPlayer.UserModified = "Admin";
-            existingPlayer.DateTimeModified = DateTime.Now;
-            existingPlayer.IsActive = true;
-
+                       
             try
             {
 
-                var checkPlayerExists = context.Players.FirstOrDefault(p => p.Id != existingPlayer.Id && (p.Nickname == existingPlayer.Nickname || p.Email == existingPlayer.Email));
+                var checkPlayerExists = context.Players.FirstOrDefault(p => p.Id != existingPlayer.Id && (p.Nickname == playerViewModel.Nickname || p.Email == playerViewModel.Email));
 
 
                 if (checkPlayerExists != null && checkPlayerExists.Nickname == playerViewModel.Nickname)
@@ -124,6 +116,14 @@ namespace SiqGames.Controllers
                 {
                     return Conflict(new { message = "Email already exists" });
                 }
+
+                existingPlayer.Nickname = playerViewModel.Nickname;
+                existingPlayer.FullName = playerViewModel.FullName;
+                existingPlayer.Email = playerViewModel.Email;
+                existingPlayer.BirthDate = playerViewModel.BirthDate;
+                existingPlayer.UserModified = "Admin";
+                existingPlayer.DateTimeModified = DateTime.Now;
+                existingPlayer.IsActive = true;
 
                 context.Players.Update(existingPlayer);
                 context.SaveChanges();
