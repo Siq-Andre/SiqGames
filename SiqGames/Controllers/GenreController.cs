@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SiqGames.Database;
 using SiqGames.Entities;
+using SiqGames.ViewModels;
+using System.Numerics;
 
 namespace SiqGames.Controllers
 {
@@ -16,22 +18,38 @@ namespace SiqGames.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddGenre([FromBody] Genre genre)
+        public IActionResult AddGenre([FromBody] GenreRequestViewModel genreRequestViewModel)
         {
-            if (genre == null)
+            if (genreRequestViewModel == null)
             {
-                return BadRequest("Genre data is required.");
+                return BadRequest(new { message = "Player data is required." });
             }
 
             try
             {
+                var checkGenreExists = context.Genres.Where(x => x.GenreName == genreRequestViewModel.GenreName).FirstOrDefault();
+
+                if (checkGenreExists != null && checkGenreExists.GenreName == genreRequestViewModel.GenreName)
+                {
+                    return Conflict(new { message = "Genre already exists" });
+                }
+
+                var genre = new Genre();
+
+                genre.GenreName = genreRequestViewModel.GenreName;
+                genre.UserCreated = "Admin";
+                genre.DateTimeCreated = DateTime.Now;
+                genre.UserModified = "Admin";
+                genre.DateTimeModified = DateTime.Now;
+                genre.IsActive = true;
+
                 context.Add(genre);
                 context.SaveChanges();
                 return CreatedAtAction(nameof(AddGenre), new { id = genre.Id }, genre);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error:" + ex.Message);
+                return StatusCode(500, new { message = "Internal server error:" + ex.Message });
             }
         }
 
@@ -40,53 +58,61 @@ namespace SiqGames.Controllers
         {
             try
             {
-                var genre = context.Set<Genre>().ToList();
+                var genre = context.Genres.ToList();
                 return Ok(genre);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error:" + ex.Message);
+                return StatusCode(500, new { message = "Internal server error:" + ex.Message });
             }
         }
 
         [HttpGet("select/{id}")]
         public IActionResult GetGenreById(int id)
         {
-            var Genre = context.Set<Genre>().FirstOrDefault(a => a.Id.Equals(id));
-            if (Genre == null)
+            var genre = context.Genres.FirstOrDefault(a => a.Id.Equals(id));
+            if (genre == null)
             {
                 return NotFound();
             }
-            return Ok(Genre);
+            return Ok(genre);
         }
 
         [HttpPut("update/{id}")]
-        public IActionResult UpdateGenre(int id, [FromBody] Genre genre)
+        public IActionResult UpdateGenre(int id, [FromBody] GenreRequestViewModel genreRequestViewModel)
         {
-            if (genre == null)
+            if (genreRequestViewModel == null)
             {
-                return BadRequest("Genre data is invalid.");
+                return BadRequest(new { message = "Genre data is invalid." });
             }
 
-            var existingGenre = context.Set<Genre>().FirstOrDefault(a => a.Id.Equals(id));
+            var existingGenre = context.Genres.FirstOrDefault(a => a.Id.Equals(id));
             if (existingGenre == null)
             {
                 return NotFound();
-            }
-
-            existingGenre.GenreName = genre.GenreName;
-            existingGenre.UserModified = genre.UserModified;
-            existingGenre.IsActive = genre.IsActive;
+            }            
 
             try
             {
-                context.Set<Genre>().Update(existingGenre);
+                var checkGenreExists = context.Genres.Where(x => x.Id != existingGenre.Id && x.GenreName == genreRequestViewModel.GenreName).FirstOrDefault();
+
+                if (checkGenreExists != null && checkGenreExists.GenreName == existingGenre.GenreName)
+                {
+                    return Conflict(new { message = "Genre already exists" });
+                }
+
+                existingGenre.GenreName = genreRequestViewModel.GenreName;
+                existingGenre.UserModified = "Admin";
+                existingGenre.DateTimeModified = DateTime.Now;
+                existingGenre.IsActive = true;
+
+                context.Genres.Update(existingGenre);
                 context.SaveChanges();
                 return Ok(existingGenre);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while updating the genre: {ex.Message}");
+                return StatusCode(500, new { message = "Internal server error:" + ex.Message });
             }
 
         }
@@ -94,7 +120,7 @@ namespace SiqGames.Controllers
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteGenre(int id)
         {
-            var genre = context.Set<Genre>().FirstOrDefault(a => a.Id.Equals(id));
+            var genre = context.Genres.FirstOrDefault(a => a.Id.Equals(id));
             if (genre == null)
             {
                 return NotFound();
