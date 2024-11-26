@@ -96,7 +96,7 @@ namespace SiqGames.Controllers
             {
                 var checkGenreExists = context.Genres.Where(x => x.Id != existingGenre.Id && x.GenreName == genreRequestViewModel.GenreName).FirstOrDefault();
 
-                if (checkGenreExists != null && checkGenreExists.GenreName == existingGenre.GenreName)
+                if (checkGenreExists != null)
                 {
                     return Conflict(new { message = "Genre already exists" });
                 }
