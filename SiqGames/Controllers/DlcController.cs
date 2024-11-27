@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SiqGames.Database;
 using SiqGames.Entities;
+using SiqGames.ViewModels;
 
 namespace SiqGames.Controllers
 {
@@ -16,22 +17,40 @@ namespace SiqGames.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddDlc([FromBody] Dlc Dlc)
+        public IActionResult AddDlc([FromBody] DlcRequestViewModel dlcRequestViewModel)
         {
-            if (Dlc == null)
+            if (dlcRequestViewModel == null)
             {
-                return BadRequest("Dlc data is required.");
+                return BadRequest(new { message = "Dlc data is invalid." });
+            }
+
+            var game = context.Studios.FirstOrDefault(s => s.Id == dlcRequestViewModel.GameId);
+
+            if (game == null)
+            {
+                return NotFound(new { message = "Game not found." });
             }
 
             try
             {
-                context.Add(Dlc);
+                var dlc = new Dlc();
+
+                dlc.Title = dlcRequestViewModel.Title;
+                dlc.Price = dlcRequestViewModel.Price;
+                dlc.Game = game; // *******************************************************
+                dlc.UserCreated = "Admin";
+                dlc.DateTimeCreated = DateTime.Now;
+                dlc.UserModified = "Admin";
+                dlc.DateTimeModified = DateTime.Now;
+                dlc.IsActive = true;
+
+                context.Add(dlc);
                 context.SaveChanges();
-                return CreatedAtAction(nameof(Dlc), new { id = Dlc.Id }, Dlc);
+                return CreatedAtAction(nameof(AddDlc), new { id = dlc.Id }, dlc);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error:" + ex.Message);
+                return StatusCode(500, new { message = "Internal server error:" + ex.Message });
             }
         }
 
@@ -40,54 +59,62 @@ namespace SiqGames.Controllers
         {
             try
             {
-                var Dlc = context.Set<Dlc>().ToList();
-                return Ok(Dlc);
+                var dlc = context.Dlcs.ToList();
+                return Ok(dlc);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error:" + ex.Message);
+                return StatusCode(500, new { message = "Internal server error:" + ex.Message });
             }
         }
 
         [HttpGet("select/{id}")]
         public IActionResult GetDlcById(int id)
         {
-            var Dlc = context.Set<Dlc>().FirstOrDefault(a => a.Id.Equals(id));
-            if (Dlc == null)
+            var dlc = context.Dlcs.FirstOrDefault(a => a.Id.Equals(id));
+            if (dlc == null)
             {
                 return NotFound();
             }
-            return Ok(Dlc);
+            return Ok(dlc);
         }
 
         [HttpPut("update/{id}")]
-        public IActionResult UpdateDlc(int id, [FromBody] Dlc Dlc)
+        public IActionResult UpdateDlc(int id, [FromBody] DlcRequestViewModel dlcRequestViewModel)
         {
-            if (Dlc == null)
+            if (dlcRequestViewModel == null)
             {
-                return BadRequest("Dlc data is invalid.");
+                return BadRequest(new { message = "Dlc data is invalid." });
             }
 
-            var existingDlc = context.Set<Dlc>().FirstOrDefault(a => a.Id.Equals(id));
+            var existingDlc = context.Dlcs.FirstOrDefault(a => a.Id.Equals(id));
             if (existingDlc == null)
             {
                 return NotFound();
             }
 
-            existingDlc.Title = Dlc.Title;
-            existingDlc.Price = Dlc.Price;
-            existingDlc.UserModified = Dlc.UserModified;
-            existingDlc.IsActive = Dlc.IsActive;
-
             try
             {
-                context.Set<Dlc>().Update(existingDlc);
+                var game = context.Games.FirstOrDefault(s => s.Id == dlcRequestViewModel.GameId);
+                if (game == null)
+                {
+                    return NotFound(new { message = "Game not found." });
+                }
+
+                existingDlc.Title = dlcRequestViewModel.Title;
+                existingDlc.Price = dlcRequestViewModel.Price;
+                existingDlc.Game = game; // *******************************************************
+                existingDlc.UserModified = "Admin";
+                existingDlc.DateTimeModified = DateTime.Now;
+                existingDlc.IsActive = true;
+
+                context.Dlcs.Update(existingDlc);
                 context.SaveChanges();
                 return Ok(existingDlc);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while updating the Dlc: {ex.Message}");
+                return StatusCode(500, new { message = "Internal server error:" + ex.Message });
             }
 
         }
@@ -95,16 +122,16 @@ namespace SiqGames.Controllers
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteDlc(int id)
         {
-            var Dlc = context.Set<Dlc>().FirstOrDefault(a => a.Id.Equals(id));
-            if (Dlc == null)
+            var dlc = context.Dlcs.FirstOrDefault(a => a.Id.Equals(id));
+            if (dlc == null)
             {
                 return NotFound();
             }
 
-            context.Set<Dlc>().Remove(Dlc);
+            context.Dlcs.Remove(dlc);
             context.SaveChanges();
 
-            return Ok(Dlc);
+            return Ok(dlc);
         }
     }
 }
