@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SiqGames.Database;
 using SiqGames.Entities;
+using SiqGames.ViewModels;
 
 namespace SiqGames.Controllers
 {
@@ -16,18 +17,87 @@ namespace SiqGames.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddSale([FromBody] Sale Sale)
+        public IActionResult AddSale([FromBody] SaleRequestViewModel saleRequestViewModel)
         {
-            if (Sale == null)
+            if (saleRequestViewModel == null)
             {
-                return BadRequest("Sale data is required.");
+                return BadRequest(new { message = "Sale data is invalid." });
+            }
+
+            if ((saleRequestViewModel.GameId == null && saleRequestViewModel.DlcId == null) || (saleRequestViewModel.GameId != null && saleRequestViewModel.DlcId != null))
+            {
+                return BadRequest(new { message = "Sale data is invalid. Is necessary to have one game or one dlc." });
+            }
+
+            var player = context.Players.FirstOrDefault(s => s.Id == saleRequestViewModel.PlayerId);
+            if (player == null)
+            {
+                return NotFound(new { message = "Player not found." });
+            }
+
+            Game game = null;
+            Dlc dlc = null;
+
+            if (saleRequestViewModel.GameId != null)
+            {
+                game = context.Games.FirstOrDefault(s => s.Id == saleRequestViewModel.GameId);
+                if (game == null)
+                {
+                    return NotFound(new { message = "Game not found." });
+                }
+            }
+
+            else if (saleRequestViewModel.DlcId != null)
+            {
+                dlc = context.Dlcs.FirstOrDefault(s => s.Id == saleRequestViewModel.DlcId);
+                if (dlc == null)
+                {
+                    return NotFound(new { message = "Dlc not found." });
+                }
             }
 
             try
             {
-                context.Add(Sale);
+                Sale existingSale = null;
+
+                if (saleRequestViewModel.GameId != null)
+                {
+                    existingSale = context.Sales
+                        .FirstOrDefault(s => s.Player == player && s.Game == game);
+
+                    if (existingSale != null)
+                    {
+                        return Conflict(new { message = "This player already owns this game." });
+                    }
+                }
+
+                if (saleRequestViewModel.DlcId != null)
+                {
+                    existingSale = context.Sales
+                        .FirstOrDefault(s => s.Player == player && s.Dlc == dlc);
+
+                    if (existingSale != null)
+                    {
+                        return Conflict(new { message = "This player already owns this DLC." });
+                    }
+                }
+
+
+                var sale = new Sale();
+
+                sale.Game = game;
+                sale.Dlc = dlc;
+                sale.FinalPrice = saleRequestViewModel.FinalPrice;
+                sale.Player = player;
+                sale.UserCreated = "Admin";
+                sale.DateTimeCreated = DateTime.Now;
+                sale.UserModified = "Admin";
+                sale.DateTimeModified = DateTime.Now;
+                sale.IsActive = true;
+
+                context.Add(sale);
                 context.SaveChanges();
-                return CreatedAtAction(nameof(Sale), new { id = Sale.Id }, Sale);
+                return CreatedAtAction(nameof(AddSale), new { id = sale.Id }, sale);
             }
             catch (Exception ex)
             {
@@ -40,19 +110,19 @@ namespace SiqGames.Controllers
         {
             try
             {
-                var Sale = context.Set<Sale>().ToList();
+                var Sale = context.Sales.ToList();
                 return Ok(Sale);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Internal server error:" + ex.Message);
+                return StatusCode(500, new { message = "Internal server error:" + ex.Message });
             }
         }
 
         [HttpGet("select/{id}")]
         public IActionResult GetSaleById(int id)
         {
-            var Sale = context.Set<Sale>().FirstOrDefault(a => a.Id.Equals(id));
+            var Sale = context.Sales.FirstOrDefault(a => a.Id.Equals(id));
             if (Sale == null)
             {
                 return NotFound();
@@ -61,32 +131,89 @@ namespace SiqGames.Controllers
         }
 
         [HttpPut("update/{id}")]
-        public IActionResult UpdateSale(int id, [FromBody] Sale Sale)
+        public IActionResult UpdateSale(int id, [FromBody] SaleRequestViewModel saleRequestViewModel)
         {
-            if (Sale == null)
+            if (saleRequestViewModel == null)
             {
-                return BadRequest("Sale data is invalid.");
+                return BadRequest(new { message = "Sale data is invalid." });
             }
 
-            var existingSale = context.Set<Sale>().FirstOrDefault(a => a.Id.Equals(id));
-            if (existingSale == null)
+            if ((saleRequestViewModel.GameId == null && saleRequestViewModel.DlcId == null) || (saleRequestViewModel.GameId != null && saleRequestViewModel.DlcId != null))
             {
-                return NotFound();
+                return BadRequest(new { message = "Sale data is invalid. Is necessary to have one game or one dlc." });
             }
 
-            existingSale.FinalPrice = Sale.FinalPrice;
-            existingSale.UserModified = Sale.UserModified;
-            existingSale.IsActive = Sale.IsActive;
+            var player = context.Players.FirstOrDefault(s => s.Id == saleRequestViewModel.PlayerId);
+            if (player == null)
+            {
+                return NotFound(new { message = "Player not found." });
+            }
+
+            Game game = null;
+            Dlc dlc = null;
+
+            if (saleRequestViewModel.GameId != null)
+            {
+                game = context.Games.FirstOrDefault(s => s.Id == saleRequestViewModel.GameId);
+                if (game == null)
+                {
+                    return NotFound(new { message = "Game not found." });
+                }
+            }
+
+            else if (saleRequestViewModel.DlcId != null)
+            {
+                dlc = context.Dlcs.FirstOrDefault(s => s.Id == saleRequestViewModel.DlcId);
+                if (dlc == null)
+                {
+                    return NotFound(new { message = "Dlc not found." });
+                }
+            }
 
             try
             {
-                context.Set<Sale>().Update(existingSale);
+                Sale existingSale = null;
+
+                if (saleRequestViewModel.GameId != null)
+                {
+                    existingSale = context.Sales
+                        .FirstOrDefault(s => s.Player == player && s.Game == game);
+
+                    if (existingSale != null)
+                    {
+                        return Conflict(new { message = "This player already owns this game." });
+                    }
+                }
+
+                if (saleRequestViewModel.DlcId != null)
+                {
+                    existingSale = context.Sales
+                        .FirstOrDefault(s => s.Player == player && s.Dlc == dlc);
+
+                    if (existingSale != null)
+                    {
+                        return Conflict(new { message = "This player already owns this DLC." });
+                    }
+                }
+
+
+                var sale = new Sale();
+
+                sale.Game = game;
+                sale.Dlc = dlc;
+                sale.FinalPrice = saleRequestViewModel.FinalPrice;
+                sale.Player = player;
+                sale.UserModified = "Admin";
+                sale.DateTimeModified = DateTime.Now;
+                sale.IsActive = true;
+
+                context.Update(sale);
                 context.SaveChanges();
-                return Ok(existingSale);
+                return CreatedAtAction(nameof(AddSale), new { id = sale.Id }, sale);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"An error occurred while updating the Sale: {ex.Message}");
+                return StatusCode(500, "Internal server error:" + ex.Message);
             }
 
         }
@@ -94,13 +221,13 @@ namespace SiqGames.Controllers
         [HttpDelete("delete/{id}")]
         public IActionResult DeleteSale(int id)
         {
-            var Sale = context.Set<Sale>().FirstOrDefault(a => a.Id.Equals(id));
+            var Sale = context.Sales.FirstOrDefault(a => a.Id.Equals(id));
             if (Sale == null)
             {
                 return NotFound();
             }
 
-            context.Set<Sale>().Remove(Sale);
+            context.Sales.Remove(Sale);
             context.SaveChanges();
 
             return Ok(Sale);
