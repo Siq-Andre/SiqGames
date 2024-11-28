@@ -138,6 +138,12 @@ namespace SiqGames.Controllers
                 return BadRequest(new { message = "Sale data is invalid." });
             }
 
+            var existingSale = context.Sales.FirstOrDefault(a => a.Id.Equals(id));
+            if (existingSale == null)
+            {
+                return NotFound(new { message = "Sale not found." });
+            }
+
             if ((saleRequestViewModel.GameId == null && saleRequestViewModel.DlcId == null) || (saleRequestViewModel.GameId != null && saleRequestViewModel.DlcId != null))
             {
                 return BadRequest(new { message = "Sale data is invalid. Is necessary to have one game or one dlc." });
@@ -172,8 +178,6 @@ namespace SiqGames.Controllers
 
             try
             {
-                Sale existingSale = null;
-
                 if (saleRequestViewModel.GameId != null)
                 {
                     existingSale = context.Sales
@@ -196,20 +200,17 @@ namespace SiqGames.Controllers
                     }
                 }
 
+                existingSale.Game = game;
+                existingSale.Dlc = dlc;
+                existingSale.FinalPrice = saleRequestViewModel.FinalPrice;
+                existingSale.Player = player;
+                existingSale.UserModified = "Admin";
+                existingSale.DateTimeModified = DateTime.Now;
+                existingSale.IsActive = true;
 
-                var sale = new Sale();
-
-                sale.Game = game;
-                sale.Dlc = dlc;
-                sale.FinalPrice = saleRequestViewModel.FinalPrice;
-                sale.Player = player;
-                sale.UserModified = "Admin";
-                sale.DateTimeModified = DateTime.Now;
-                sale.IsActive = true;
-
-                context.Update(sale);
+                context.Update(existingSale);
                 context.SaveChanges();
-                return CreatedAtAction(nameof(AddSale), new { id = sale.Id }, sale);
+                return CreatedAtAction(nameof(AddSale), new { id = existingSale.Id }, existingSale);
             }
             catch (Exception ex)
             {
