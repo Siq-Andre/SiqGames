@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SiqGames.Database;
 using SiqGames.Entities;
 using SiqGames.ViewModels;
@@ -24,7 +25,8 @@ namespace SiqGames.Controllers
                 return BadRequest(new { message = "Dlc data is invalid." });
             }
 
-            var game = context.Studios.FirstOrDefault(s => s.Id == dlcRequestViewModel.GameId);
+            var game = context.Games.FirstOrDefault(s => s.Id == dlcRequestViewModel.GameId);
+
 
             if (game == null)
             {
@@ -37,14 +39,15 @@ namespace SiqGames.Controllers
 
                 dlc.Title = dlcRequestViewModel.Title;
                 dlc.Price = dlcRequestViewModel.Price;
-                dlc.Game = game; // *******************************************************
                 dlc.UserCreated = "Admin";
                 dlc.DateTimeCreated = DateTime.Now;
                 dlc.UserModified = "Admin";
                 dlc.DateTimeModified = DateTime.Now;
                 dlc.IsActive = true;
 
-                context.Add(dlc);
+
+                game.Dlcs.Add(dlc);
+                
                 context.SaveChanges();
                 return CreatedAtAction(nameof(AddDlc), new { id = dlc.Id }, dlc);
             }
@@ -59,7 +62,7 @@ namespace SiqGames.Controllers
         {
             try
             {
-                var dlc = context.Dlcs.ToList();
+                var dlc = context.Dlcs.AsNoTracking().ToList();
                 return Ok(dlc);
             }
             catch (Exception ex)
@@ -71,7 +74,7 @@ namespace SiqGames.Controllers
         [HttpGet("select/{id}")]
         public IActionResult GetDlcById(int id)
         {
-            var dlc = context.Dlcs.FirstOrDefault(a => a.Id.Equals(id));
+            var dlc = context.Dlcs.AsNoTracking().FirstOrDefault(a => a.Id.Equals(id));
             if (dlc == null)
             {
                 return NotFound();
@@ -87,28 +90,30 @@ namespace SiqGames.Controllers
                 return BadRequest(new { message = "Dlc data is invalid." });
             }
 
-            var existingDlc = context.Dlcs.FirstOrDefault(a => a.Id.Equals(id));
+            var game = context.Games.Include(x => x.Dlcs).FirstOrDefault(s => s.Id == dlcRequestViewModel.GameId);
+
+            var existingDlc = game.Dlcs.Where(x => x.Id == id).FirstOrDefault();
+
+
+
+            if (game == null)
+            {
+                return NotFound(new { message = "Game not found." });
+            }
+
             if (existingDlc == null)
             {
-                return NotFound();
+                return NotFound(new { message = "Dlc does not belong in this game." });
             }
 
             try
             {
-                var game = context.Games.FirstOrDefault(s => s.Id == dlcRequestViewModel.GameId);
-                if (game == null)
-                {
-                    return NotFound(new { message = "Game not found." });
-                }
-
                 existingDlc.Title = dlcRequestViewModel.Title;
                 existingDlc.Price = dlcRequestViewModel.Price;
-                existingDlc.Game = game; // *******************************************************
                 existingDlc.UserModified = "Admin";
                 existingDlc.DateTimeModified = DateTime.Now;
-                existingDlc.IsActive = true;
+                existingDlc.IsActive = true;  
 
-                context.Dlcs.Update(existingDlc);
                 context.SaveChanges();
                 return Ok(existingDlc);
             }
