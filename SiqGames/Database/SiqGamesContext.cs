@@ -16,6 +16,13 @@ namespace SiqGames.Database
         public DbSet<Dlc> Dlcs { get; set; }
         public DbSet<PlayerPlayer> PlayerPlayers { get; set; }
 
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.LogTo(Console.WriteLine);
+            //optionsBuilder.UseLazyLoadingProxies();
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new PlayerConfigurations());
