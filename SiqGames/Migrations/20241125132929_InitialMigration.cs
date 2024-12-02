@@ -18,11 +18,11 @@ namespace SiqGames.Migrations
                     GenreId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GenreName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,11 +57,11 @@ namespace SiqGames.Migrations
                     StudioId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudioName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,11 +76,11 @@ namespace SiqGames.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Player1Id = table.Column<int>(type: "int", nullable: false),
                     Player2Id = table.Column<int>(type: "int", nullable: false),
-                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -109,11 +109,11 @@ namespace SiqGames.Migrations
                     Price = table.Column<decimal>(type: "money", nullable: false),
                     StudioId = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -158,12 +158,12 @@ namespace SiqGames.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     Price = table.Column<decimal>(type: "money", nullable: false),
-                    GameId = table.Column<int>(type: "int", nullable: true),
-                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -172,7 +172,8 @@ namespace SiqGames.Migrations
                         name: "FK_Dlc_Game_GameId",
                         column: x => x.GameId,
                         principalTable: "Game",
-                        principalColumn: "GameId");
+                        principalColumn: "GameId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -229,15 +230,15 @@ namespace SiqGames.Migrations
                 {
                     SaleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    GameId = table.Column<int>(type: "int", nullable: false),
-                    DlcId = table.Column<int>(type: "int", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: true),
+                    DlcId = table.Column<int>(type: "int", nullable: true),
                     FinalPrice = table.Column<decimal>(type: "money", nullable: false),
-                    PlayerId = table.Column<int>(type: "int", nullable: true),
-                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
-                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false, defaultValue: "admin"),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                    PlayerId = table.Column<int>(type: "int", nullable: false),
+                    DateTimeCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserCreated = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    DateTimeModified = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserModified = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -256,7 +257,8 @@ namespace SiqGames.Migrations
                         name: "FK_Sales_Players_PlayerId",
                         column: x => x.PlayerId,
                         principalTable: "Players",
-                        principalColumn: "GameId");
+                        principalColumn: "GameId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
