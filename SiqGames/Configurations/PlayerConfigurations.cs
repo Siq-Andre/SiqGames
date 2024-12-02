@@ -12,7 +12,7 @@ namespace SiqGames.Configurations
             builder.HasKey(p => p.Id);
 
             builder.Property(e => e.Id)
-                .HasColumnName($"{nameof(Game)}Id")
+                .HasColumnName($"{nameof(Player)}Id")
                 .ValueGeneratedOnAdd()
                 .IsRequired();
 

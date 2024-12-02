@@ -3,6 +3,6 @@
     public class Studio: Entity<int>
     {
         public string StudioName { get; set; }
-        public ICollection<Player> Players { get; set; }
+        public virtual ICollection<Player> Players { get; set; }
     }
 }

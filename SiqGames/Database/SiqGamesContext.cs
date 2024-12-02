@@ -13,8 +13,15 @@ namespace SiqGames.Database
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<Sale> Sales { get; set; }
-        public DbSet<Game> Dlcs { get; set; }
+        public DbSet<Dlc> Dlcs { get; set; }
         public DbSet<PlayerPlayer> PlayerPlayers { get; set; }
+
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.LogTo(Console.WriteLine);
+            //optionsBuilder.UseLazyLoadingProxies();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

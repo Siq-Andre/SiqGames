@@ -28,7 +28,8 @@ namespace SiqGames.Configurations
                 .UsingEntity(j => j.ToTable("GameGenres"));
 
             builder.HasMany(e => e.Dlcs)
-                .WithOne();
+                .WithOne()
+                .IsRequired();
 
             builder.HasOne(e => e.Studio)
                 .WithMany()
@@ -39,27 +40,21 @@ namespace SiqGames.Configurations
                 .IsRequired();
 
             builder.Property(p => p.DateTimeCreated)
-                .IsRequired()
-                .HasDefaultValueSql("getdate()");
+                 .IsRequired();
 
             builder.Property(p => p.UserCreated)
                 .HasMaxLength(30)
-                .IsRequired()
-                .HasDefaultValue("admin");
+                .IsRequired();
 
             builder.Property(p => p.DateTimeModified)
-                .IsRequired()
-                .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql("getdate()");
+                .IsRequired();
 
             builder.Property(p => p.UserModified)
                 .HasMaxLength(30)
-                .IsRequired()
-                .HasDefaultValue("admin");
+                .IsRequired();
 
             builder.Property(p => p.IsActive)
-                .IsRequired()
-                .HasDefaultValue(1);
+                .IsRequired();
         }
     }
 }
