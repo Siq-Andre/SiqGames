@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SiqGames.Database;
 using SiqGames.Entities;
 using SiqGames.ViewModels;
@@ -30,72 +31,40 @@ namespace SiqGames.Controllers
             }
 
             var player = context.Players.FirstOrDefault(s => s.Id == saleRequestViewModel.PlayerId);
+
+            var game = context.Games.FirstOrDefault(x => x.Id == saleRequestViewModel.GameId);
+            var dlc = context.Dlcs.FirstOrDefault(x => x.Id == saleRequestViewModel.DlcId);
+
+
             if (player == null)
             {
                 return NotFound(new { message = "Player not found." });
+            } 
+            
+            else if (saleRequestViewModel.GameId != null && game == null)
+            {
+                return NotFound(new { message = "Game not found." });
             }
 
-            Game game = null;
-            Dlc dlc = null;
-
-            if (saleRequestViewModel.GameId != null)
+            else if (saleRequestViewModel.DlcId != null && dlc == null)
             {
-                game = context.Games.FirstOrDefault(s => s.Id == saleRequestViewModel.GameId);
-                if (game == null)
-                {
-                    return NotFound(new { message = "Game not found." });
-                }
-            }
-
-            else if (saleRequestViewModel.DlcId != null)
-            {
-                dlc = context.Dlcs.FirstOrDefault(s => s.Id == saleRequestViewModel.DlcId);
-                if (dlc == null)
-                {
-                    return NotFound(new { message = "Dlc not found." });
-                }
+                return NotFound(new { message = "Dlc not found." });
             }
 
             try
-            {
-                Sale existingSale = null;
-
-                if (saleRequestViewModel.GameId != null)
-                {
-                    existingSale = context.Sales
-                        .FirstOrDefault(s => s.Player == player && s.Game == game);
-
-                    if (existingSale != null)
-                    {
-                        return Conflict(new { message = "This player already owns this game." });
-                    }
-                }
-
-                if (saleRequestViewModel.DlcId != null)
-                {
-                    existingSale = context.Sales
-                        .FirstOrDefault(s => s.Player == player && s.Dlc == dlc);
-
-                    if (existingSale != null)
-                    {
-                        return Conflict(new { message = "This player already owns this DLC." });
-                    }
-                }
-
-
+            {     
                 var sale = new Sale();
 
                 sale.Game = game;
                 sale.Dlc = dlc;
                 sale.FinalPrice = saleRequestViewModel.FinalPrice;
-                sale.Player = player;
                 sale.UserCreated = "Admin";
                 sale.DateTimeCreated = DateTime.Now;
                 sale.UserModified = "Admin";
                 sale.DateTimeModified = DateTime.Now;
                 sale.IsActive = true;
 
-                context.Add(sale);
+                player.Sales.Add(sale);
                 context.SaveChanges();
                 return CreatedAtAction(nameof(AddSale), new { id = sale.Id }, sale);
             }
@@ -110,8 +79,8 @@ namespace SiqGames.Controllers
         {
             try
             {
-                var Sale = context.Sales.ToList();
-                return Ok(Sale);
+                var sales = context.Sales.AsNoTracking().ToList();
+                return Ok(sales);
             }
             catch (Exception ex)
             {
@@ -122,12 +91,12 @@ namespace SiqGames.Controllers
         [HttpGet("select/{id}")]
         public IActionResult GetSaleById(int id)
         {
-            var Sale = context.Sales.FirstOrDefault(a => a.Id.Equals(id));
-            if (Sale == null)
+            var sale = context.Sales.AsNoTracking().FirstOrDefault(a => a.Id.Equals(id));
+            if (sale == null)
             {
                 return NotFound();
             }
-            return Ok(Sale);
+            return Ok(sale);
         }
 
         [HttpPut("update/{id}")]
@@ -138,7 +107,15 @@ namespace SiqGames.Controllers
                 return BadRequest(new { message = "Sale data is invalid." });
             }
 
-            var existingSale = context.Sales.FirstOrDefault(a => a.Id.Equals(id));
+            var player = context.Players.Include(x => x.Sales).FirstOrDefault(s => s.Id == saleRequestViewModel.PlayerId);
+
+            if (player == null)
+            {
+                return NotFound(new { message = "Player not found." });
+            }
+
+            var existingSale = player.Sales.Where(x => x.Id == id).FirstOrDefault();
+
             if (existingSale == null)
             {
                 return NotFound(new { message = "Sale not found." });
@@ -149,66 +126,29 @@ namespace SiqGames.Controllers
                 return BadRequest(new { message = "Sale data is invalid. Is necessary to have one game or one dlc." });
             }
 
-            var player = context.Players.FirstOrDefault(s => s.Id == saleRequestViewModel.PlayerId);
-            if (player == null)
+            var game = context.Games.FirstOrDefault(x => x.Id == saleRequestViewModel.GameId);
+            var dlc = context.Dlcs.FirstOrDefault(x => x.Id == saleRequestViewModel.DlcId);
+
+            if (saleRequestViewModel.GameId != null && game == null)
             {
-                return NotFound(new { message = "Player not found." });
+                return NotFound(new { message = "Game not found." });
             }
 
-            Game game = null;
-            Dlc dlc = null;
-
-            if (saleRequestViewModel.GameId != null)
+            if (saleRequestViewModel.DlcId != null && dlc == null)
             {
-                game = context.Games.FirstOrDefault(s => s.Id == saleRequestViewModel.GameId);
-                if (game == null)
-                {
-                    return NotFound(new { message = "Game not found." });
-                }
+                return NotFound(new { message = "Dlc not found." });
             }
 
-            else if (saleRequestViewModel.DlcId != null)
-            {
-                dlc = context.Dlcs.FirstOrDefault(s => s.Id == saleRequestViewModel.DlcId);
-                if (dlc == null)
-                {
-                    return NotFound(new { message = "Dlc not found." });
-                }
-            }
 
             try
             {
-                if (saleRequestViewModel.GameId != null)
-                {
-                    existingSale = context.Sales
-                        .FirstOrDefault(s => s.Player == player && s.Game == game);
-
-                    if (existingSale != null)
-                    {
-                        return Conflict(new { message = "This player already owns this game." });
-                    }
-                }
-
-                if (saleRequestViewModel.DlcId != null)
-                {
-                    existingSale = context.Sales
-                        .FirstOrDefault(s => s.Player == player && s.Dlc == dlc);
-
-                    if (existingSale != null)
-                    {
-                        return Conflict(new { message = "This player already owns this DLC." });
-                    }
-                }
-
                 existingSale.Game = game;
                 existingSale.Dlc = dlc;
                 existingSale.FinalPrice = saleRequestViewModel.FinalPrice;
-                existingSale.Player = player;
                 existingSale.UserModified = "Admin";
                 existingSale.DateTimeModified = DateTime.Now;
                 existingSale.IsActive = true;
 
-                context.Update(existingSale);
                 context.SaveChanges();
                 return CreatedAtAction(nameof(AddSale), new { id = existingSale.Id }, existingSale);
             }

@@ -11,5 +11,15 @@
         public virtual ICollection<PlayerPlayer> Player1Friends { get; set; }
         public virtual ICollection<PlayerPlayer> Player2Friends { get; set; }
         public virtual ICollection<Studio> Studios { get; set; }
+
+        public Player()
+        {
+            Games = new List<Game>();
+            Sales = new List<Sale>();
+            Player1Friends = new List<PlayerPlayer>();
+            Player2Friends = new List<PlayerPlayer>();
+            Studios = new List<Studio>();
+
+        }
     }
 }
