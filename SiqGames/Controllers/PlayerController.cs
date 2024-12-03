@@ -2,6 +2,7 @@
 using SiqGames.Database;
 using SiqGames.Entities;
 using SiqGames.ViewModels;
+using System.Numerics;
 
 namespace SiqGames.Controllers
 {
@@ -54,7 +55,23 @@ namespace SiqGames.Controllers
 
                 context.Add(player);
                 context.SaveChanges();
-                return CreatedAtAction(nameof(AddPlayer), new { id = player.Id }, playerViewModel);
+
+                var playerResponse = new PlayerResponseViewModel
+                {
+                    PlayerId = player.Id,
+                    Nickname = player.Nickname,
+                    FullName = player.FullName,
+                    Email = player.Email,
+                    BirthDate = player.BirthDate,
+                    DateTimeCreated = player.DateTimeCreated,
+                    UserCreated = player.UserCreated,
+                    DateTimeModified = player.DateTimeModified,
+                    UserModified = player.UserModified,
+                    IsActive = player.IsActive
+                };
+
+                return CreatedAtAction(nameof(AddPlayer), new { id = player.Id }, playerResponse);
+
             }
             catch (Exception ex)
             {
@@ -63,12 +80,27 @@ namespace SiqGames.Controllers
         }
 
         [HttpGet("selectAll")]
-        public ActionResult<IEnumerable<Player>> SelectPlayers()
+        public ActionResult<IEnumerable<PlayerResponseViewModel>> SelectPlayers()
         {
             try
             {
-                var player = context.Players.ToList();
-                return Ok(player);
+                var players = context.Players
+                .Select(p => new PlayerResponseViewModel
+                {
+                    PlayerId = p.Id,  
+                    Nickname = p.Nickname,
+                    FullName = p.FullName,
+                    Email = p.Email,
+                    BirthDate = p.BirthDate,
+                    DateTimeCreated = p.DateTimeCreated,
+                    UserCreated = p.UserCreated,
+                    DateTimeModified = p.DateTimeModified,
+                    UserModified = p.UserModified,
+                    IsActive = p.IsActive
+                })
+                .ToList(); 
+
+                return Ok(players);
             }
             catch (Exception ex)
             {
@@ -79,12 +111,28 @@ namespace SiqGames.Controllers
         [HttpGet("select/{id}")]
         public IActionResult GetPlayerById(int id)
         {
-            var Player = context.Players.FirstOrDefault(a => a.Id.Equals(id));
-            if (Player == null)
+            var player = context.Players.FirstOrDefault(a => a.Id.Equals(id));
+
+            if (player == null)
             {
                 return NotFound();
             }
-            return Ok(Player);
+
+            var playerResponse = new PlayerResponseViewModel
+            {
+                PlayerId = player.Id,
+                Nickname = player.Nickname,
+                FullName = player.FullName,
+                Email = player.Email,
+                BirthDate = player.BirthDate,
+                DateTimeCreated = player.DateTimeCreated,
+                UserCreated = player.UserCreated,
+                DateTimeModified = player.DateTimeModified,
+                UserModified = player.UserModified,
+                IsActive = player.IsActive
+            };
+
+            return Ok(playerResponse);
         }
 
         [HttpPut("update/{id}")]
@@ -127,7 +175,22 @@ namespace SiqGames.Controllers
 
                 context.Players.Update(existingPlayer);
                 context.SaveChanges();
-                return Ok(existingPlayer);
+
+                var playerResponse = new PlayerResponseViewModel
+                {
+                    PlayerId = existingPlayer.Id,
+                    Nickname = existingPlayer.Nickname,
+                    FullName = existingPlayer.FullName,
+                    Email = existingPlayer.Email,
+                    BirthDate = existingPlayer.BirthDate,
+                    DateTimeCreated = existingPlayer.DateTimeCreated,
+                    UserCreated = existingPlayer.UserCreated,
+                    DateTimeModified = existingPlayer.DateTimeModified,
+                    UserModified = existingPlayer.UserModified,
+                    IsActive = existingPlayer.IsActive
+                };
+
+                return Ok(playerResponse);
             }
             catch (Exception ex)
             {
@@ -148,7 +211,21 @@ namespace SiqGames.Controllers
             context.Players.Remove(player);
             context.SaveChanges();
 
-            return Ok(player);
+            var playerResponse = new PlayerResponseViewModel
+            {
+                PlayerId = player.Id,
+                Nickname = player.Nickname,
+                FullName = player.FullName,
+                Email = player.Email,
+                BirthDate = player.BirthDate,
+                DateTimeCreated = player.DateTimeCreated,
+                UserCreated = player.UserCreated,
+                DateTimeModified = player.DateTimeModified,
+                UserModified = player.UserModified,
+                IsActive = player.IsActive
+            };
+
+            return Ok(playerResponse);
         }
 
     }
