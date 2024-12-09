@@ -108,6 +108,51 @@ namespace SiqGames.Controllers
             }
         }
 
+        [HttpGet("selectAll/{page}")]
+        public ActionResult<IEnumerable<PlayerResponseViewModel>> SelectPlayerPage(int page)
+        {
+            try
+            {
+                page = page - 1;
+                var AmountOfItemsPerPage = 5;
+                var SkipAmount = AmountOfItemsPerPage * page;
+                var totalPlayers = context.Players.Count();
+
+                var players = context.Players
+                .Select(p => new PlayerResponseViewModel
+                {
+                    PlayerId = p.Id,
+                    Nickname = p.Nickname,
+                    FullName = p.FullName,
+                    Email = p.Email,
+                    BirthDate = p.BirthDate,
+                    DateTimeCreated = p.DateTimeCreated,
+                    UserCreated = p.UserCreated,
+                    DateTimeModified = p.DateTimeModified,
+                    UserModified = p.UserModified,
+                    IsActive = p.IsActive
+                })
+                .Where(x => x.IsActive == true)
+                .Skip(SkipAmount)
+                .Take(AmountOfItemsPerPage)
+                .ToList();
+
+                Console.WriteLine($"Players fetched: {players.Count()}");
+
+                var totalPages = (int)Math.Ceiling((double)totalPlayers / AmountOfItemsPerPage);
+
+                return Ok(new
+                {
+                    Players = players,
+                    TotalPages = totalPages
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Internal server error:" + ex.Message });
+            }
+        }
+
         [HttpGet("select/{id}")]
         public IActionResult GetPlayerById(int id)
         {
@@ -226,6 +271,45 @@ namespace SiqGames.Controllers
             };
 
             return Ok(playerResponse);
+        }
+
+        [HttpPut("delete/{id}")]
+        public IActionResult SoftDeletePlayer(int id)
+        {
+            var player = context.Players.FirstOrDefault(a => a.Id.Equals(id));
+            if (player == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                player.IsActive = false;
+
+                context.Players.Update(player);
+                context.SaveChanges();
+
+                var playerResponse = new PlayerResponseViewModel
+                {
+                    PlayerId = player.Id,
+                    Nickname = player.Nickname,
+                    FullName = player.FullName,
+                    Email = player.Email,
+                    BirthDate = player.BirthDate,
+                    DateTimeCreated = player.DateTimeCreated,
+                    UserCreated = player.UserCreated,
+                    DateTimeModified = player.DateTimeModified,
+                    UserModified = player.UserModified,
+                    IsActive = player.IsActive
+                };
+
+                return Ok(playerResponse);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Internal server error:" + ex.Message });
+            }
+
         }
 
     }
