@@ -6,6 +6,7 @@
         public string FullName { get; set; }
         public string Email { get; set; }
         public virtual ICollection<Game> Games { get; set; }
+        public virtual ICollection<Dlc> Dlcs { get; set; }
         public virtual ICollection<Sale> Sales { get; set; }
         public DateOnly BirthDate { get; set; }
         public virtual ICollection<PlayerPlayer> Player1Friends { get; set; }

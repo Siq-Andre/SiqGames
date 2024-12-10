@@ -38,6 +38,10 @@ namespace SiqGames.Configurations
                  .WithMany(g => g.Players)
                  .UsingEntity(j => j.ToTable("PlayerGames"));
 
+            builder.HasMany(x => x.Dlcs)
+                .WithMany(x => x.Players)
+                .UsingEntity(j => j.ToTable("PlayerDlcs"));
+
             builder.HasMany(e => e.Sales)
                 .WithOne()
                 .IsRequired();

@@ -4,5 +4,6 @@
     {
         public string Title {  get; set; }
         public decimal Price { get; set; }
+        public virtual ICollection<Player> Players { get; set; }
     }
 }
