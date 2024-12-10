@@ -60,7 +60,7 @@ namespace SiqGames.Controllers
         {
             try
             {
-                var games = context.Games.ToList();
+                var games = context.Games.Include(x => x.Studio).ToList();
                 return Ok(games);
             }
             catch (Exception ex)
@@ -96,11 +96,10 @@ namespace SiqGames.Controllers
 
             try
             {
-                var studio = context.Studios.FirstOrDefault(s => s.Id == gameRequestViewModel.StudioId);
-                if (studio == null)
-                {
-                    return NotFound(new { message = "Studio not found." });
-                }
+                var studio = new Studio();
+                studio.Id = gameRequestViewModel.StudioId;
+
+                context.Attach(studio); //informa o StudioId sem consultar no banco
 
                 existingGame.Title = gameRequestViewModel.Title;
                 existingGame.Price = gameRequestViewModel.Price;
