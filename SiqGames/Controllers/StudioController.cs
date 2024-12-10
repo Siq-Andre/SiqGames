@@ -66,6 +66,45 @@ namespace SiqGames.Controllers
             }
         }
 
+        [HttpGet("selectAll/{page}")]
+        public ActionResult<IEnumerable<StudioResponseViewModel>> SelectStudioPage(int page)
+        {
+            try
+            {
+                page = page - 1;
+                var AmountOfItemsPerPage = 5;
+                var SkipAmount = AmountOfItemsPerPage * page;
+                var totalStudios = context.Studios.Where(x => x.IsActive == true).Count();
+
+                var studios = context.Studios.Select(x => new StudioResponseViewModel
+                {
+                    StudioId = x.Id,
+                    StudioName = x.StudioName,
+                    DateTimeCreated = x.DateTimeCreated,
+                    UserCreated = x.UserCreated,
+                    DateTimeModified = x.DateTimeModified,
+                    UserModified = x.UserModified,
+                    IsActive = x.IsActive
+                })
+                    .Where(x => x.IsActive == true)
+                    .Skip(SkipAmount)
+                    .Take(AmountOfItemsPerPage)
+                    .ToList();
+
+                var totalPages = (int)Math.Ceiling((double)totalStudios / AmountOfItemsPerPage);
+
+                return Ok(new
+                {
+                    Studio = studios,
+                    TotalPages = totalPages
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Internal server error:" + ex.Message });
+            }
+        }
+
         [HttpGet("select/{id}")]
         public IActionResult GetStudioById(int id)
         {
@@ -129,6 +168,42 @@ namespace SiqGames.Controllers
             context.SaveChanges();
 
             return Ok(Studio);
+        }
+
+        [HttpPut("delete/{id}")]
+        public IActionResult SoftDeleteStudio(int id)
+        {
+            var studio = context.Studios.FirstOrDefault(a => a.Id.Equals(id));
+            if (studio == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                studio.IsActive = false;
+
+                context.Studios.Update(studio);
+                context.SaveChanges();
+
+                var studioResonse = new StudioResponseViewModel
+                {
+                    StudioId = studio.Id,
+                    StudioName = studio.StudioName,
+                    DateTimeCreated = studio.DateTimeCreated,
+                    UserCreated = studio.UserCreated,
+                    DateTimeModified = studio.DateTimeModified,
+                    UserModified = studio.UserModified,
+                    IsActive = studio.IsActive
+                };
+
+                return Ok(studioResonse);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Internal server error:" + ex.Message });
+            }
+
         }
     }
 }
