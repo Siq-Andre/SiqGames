@@ -116,7 +116,7 @@ namespace SiqGames.Controllers
                 page = page - 1;
                 var AmountOfItemsPerPage = 5;
                 var SkipAmount = AmountOfItemsPerPage * page;
-                var totalPlayers = context.Players.Count();
+                var totalPlayers = context.Players.Where(x => x.IsActive == true).Count();
 
                 var players = context.Players
                 .Select(p => new PlayerResponseViewModel
@@ -136,8 +136,6 @@ namespace SiqGames.Controllers
                 .Skip(SkipAmount)
                 .Take(AmountOfItemsPerPage)
                 .ToList();
-
-                Console.WriteLine($"Players fetched: {players.Count()}");
 
                 var totalPages = (int)Math.Ceiling((double)totalPlayers / AmountOfItemsPerPage);
 
