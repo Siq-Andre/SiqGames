@@ -47,7 +47,22 @@ namespace SiqGames.Controllers
 
                 context.Add(game);
                 context.SaveChanges();
-                return CreatedAtAction(nameof(AddGame), new { id = game.Id }, game);
+
+                var gameResponse = new GameResponseViewModel
+                {
+                    GameId = game.Id,
+                    Title = game.Title,
+                    Price = game.Price,
+                    StudioId = gameRequestViewModel.StudioId,
+                    Description = game.Description,
+                    UserCreated = game.UserCreated,
+                    DateTimeCreated = game.DateTimeCreated,
+                    UserModified = game.UserModified,
+                    DateTimeModified = game.DateTimeModified,
+                    IsActive = game.IsActive
+                };
+
+                return CreatedAtAction(nameof(AddGame), new { id = game.Id }, gameResponse);
             }
             catch (Exception ex)
             {
@@ -60,7 +75,20 @@ namespace SiqGames.Controllers
         {
             try
             {
-                var games = context.Games.Include(x => x.Studio).ToList();
+                var games = context.Games
+                    .Select(g => new GameResponseViewModel
+                    {
+                        GameId = g.Id,
+                        Title = g.Title,
+                        Price = g.Price,
+                        StudioId = g.Studio.Id,
+                        Description = g.Description,
+                        UserCreated = g.UserCreated,
+                        DateTimeCreated = g.DateTimeCreated,
+                        UserModified = g.UserModified,
+                        DateTimeModified = g.DateTimeModified,
+                        IsActive = g.IsActive
+                    });
                 return Ok(games);
             }
             catch (Exception ex)
@@ -72,12 +100,30 @@ namespace SiqGames.Controllers
         [HttpGet("select/{id}")]
         public IActionResult GetGameById(int id)
         {
-            var Game = context.Set<Game>().FirstOrDefault(a => a.Id.Equals(id));
-            if (Game == null)
+            //var game = context.Games.FirstOrDefault(a => a.Id.Equals(id));
+
+            var game = context.Games
+                    .Select(g => new GameResponseViewModel
+                    {
+                        GameId = g.Id,
+                        Title = g.Title,
+                        Price = g.Price,
+                        StudioId = g.Studio.Id,
+                        Description = g.Description,
+                        UserCreated = g.UserCreated,
+                        DateTimeCreated = g.DateTimeCreated,
+                        UserModified = g.UserModified,
+                        DateTimeModified = g.DateTimeModified,
+                        IsActive = g.IsActive
+                    })
+                    .Where(g => g.GameId == id);
+
+            if (game == null)
             {
                 return NotFound();
             }
-            return Ok(Game);
+
+            return Ok(game);
         }
 
         [HttpPut("update/{id}")]
@@ -111,7 +157,22 @@ namespace SiqGames.Controllers
 
                 context.Games.Update(existingGame);
                 context.SaveChanges();
-                return Ok(existingGame);
+
+                var gameResponse = new GameResponseViewModel
+                {
+                    GameId = existingGame.Id,
+                    Title = existingGame.Title,
+                    Price = existingGame.Price,
+                    StudioId = gameRequestViewModel.StudioId,
+                    Description = existingGame.Description,
+                    UserCreated = existingGame.UserCreated,
+                    DateTimeCreated = existingGame.DateTimeCreated,
+                    UserModified = existingGame.UserModified,
+                    DateTimeModified = existingGame.DateTimeModified,
+                    IsActive = existingGame.IsActive
+                };
+
+                return Ok(gameResponse);
             }
             catch (Exception ex)
             {
@@ -132,7 +193,21 @@ namespace SiqGames.Controllers
             context.Games.Remove(game);
             context.SaveChanges();
 
-            return Ok(game);
+            var gameResponse = new GameResponseViewModel
+            {
+                GameId = game.Id,
+                Title = game.Title,
+                Price = game.Price,
+                StudioId = game.Studio.Id,
+                Description = game.Description,
+                UserCreated = game.UserCreated,
+                DateTimeCreated = game.DateTimeCreated,
+                UserModified = game.UserModified,
+                DateTimeModified = game.DateTimeModified,
+                IsActive = game.IsActive
+            };
+
+            return Ok(gameResponse);
         }
 
 
